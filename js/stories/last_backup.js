@@ -1,7 +1,7 @@
 export default {
     metadata: {
         title: "The Last Backup",
-        version: "1.0.1",
+        version: "1.3.0",
         lastUpdated: "2024-03-19",
         author: "FutureStrike Team",
         description: "A cyberpunk thriller in Neo-Shanghai",

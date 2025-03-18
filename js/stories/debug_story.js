@@ -1,7 +1,7 @@
 export default {
     metadata: {
         title: "Debug Story",
-        version: "1.0.0",
+        version: "1.3.0",
         lastUpdated: "2024-03-19",
         author: "Debug Team",
         description: "Testing dice and action mechanics",

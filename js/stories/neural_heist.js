@@ -1,7 +1,7 @@
 export default {
     metadata: {
         title: "Neural Heist",
-        version: "1.0.0",
+        version: "1.3.0",
         lastUpdated: "2024-03-19",
         author: "FutureStrike Team",
         description: "Break into a corporate vault - inside someone's mind",

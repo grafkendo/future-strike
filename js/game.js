@@ -4,19 +4,13 @@ class Game {
         this.story = null;
         this.health = 20;
         this.currentScene = 1;
-        this.currentDice = [];
+        this.currentDice = [];      // Stores the dice values for current turn
+        this.usedDice = new Set();  // Tracks which dice indices have been used this turn
         this.currentChoice = null;
         this.rollConfirmed = false;
         this.waitingForNewRoll = true;
-        this.usedDice = new Set();
         
-        console.log('Game initialized with:', {
-            storyId: this.storyId,
-            currentScene: this.currentScene,
-            usedDice: this.usedDice
-        });
-        
-        // Initialize game asynchronously
+        console.log('Game initialized, waiting for first roll');
         this.init();
     }
 
@@ -221,23 +215,17 @@ class Game {
             .map(box => parseInt(box.value))
             .filter(val => !isNaN(val) && val >= 1 && val <= 6);
 
+        console.log('Submitted dice values:', diceValues);
+
         if (diceValues.length === 5) {
             this.currentDice = diceValues;
+            this.usedDice.clear(); // Reset used dice for new turn
             this.rollConfirmed = true;
             this.waitingForNewRoll = false;
+            console.log('New turn started with dice:', this.currentDice);
             this.displayDice();
             this.clearDiceInput();
             this.updateGameState();
-        } else {
-            // Visual feedback for invalid input
-            document.querySelectorAll('.dice-box').forEach(box => {
-                if (!box.value || parseInt(box.value) < 1 || parseInt(box.value) > 6) {
-                    box.style.borderColor = '#ff0000';
-                    setTimeout(() => {
-                        box.style.borderColor = '#ff69b4';
-                    }, 1000);
-                }
-            });
         }
     }
 
@@ -248,23 +236,59 @@ class Game {
         this.currentDice.forEach((value, index) => {
             const die = document.createElement('div');
             die.className = 'die';
+            if (this.usedDice.has(index)) {
+                die.classList.add('used'); // Add visual indicator for used dice
+            }
             die.textContent = value;
-            die.addEventListener('click', () => this.selectDie(index));
+            die.addEventListener('click', () => {
+                if (!this.usedDice.has(index) && this.currentChoice) {
+                    this.selectDie(index);
+                }
+            });
             diceContainer.appendChild(die);
+        });
+
+        console.log('Displayed dice:', {
+            values: this.currentDice,
+            usedDice: Array.from(this.usedDice)
         });
     }
 
     selectDie(index) {
-        if (!this.currentChoice) return;
-        
+        if (this.usedDice.has(index)) {
+            console.log('Die already used:', index);
+            return;
+        }
+
+        console.log('Die selected:', {
+            index: index,
+            value: this.currentDice[index],
+            currentChoice: this.currentChoice
+        });
+
         const value = this.currentDice[index];
         const difficulty = this.getCurrentDifficulty();
+        
+        // Mark die as used
+        this.usedDice.add(index);
+        
+        // Update dice display
+        this.displayDice();
+        
         this.calculateOutcome(value, difficulty);
         
-        // Progress to next scene after outcome
-        setTimeout(() => {
-            this.advanceStory();
-        }, 2000);
+        // Reset choice selection
+        this.currentChoice = null;
+        document.querySelectorAll('.choice-button').forEach(btn => 
+            btn.classList.remove('selected'));
+        
+        // Check if turn should end (all dice used or no more valid actions)
+        if (this.usedDice.size === 5) {
+            console.log('All dice used, advancing to next scene');
+            setTimeout(() => {
+                this.advanceStory();
+            }, 2000);
+        }
     }
 
     getCurrentDifficulty() {
@@ -351,10 +375,11 @@ class Game {
     }
 
     advanceStory() {
-        // Reset game state
+        // Reset for next turn
         this.rollConfirmed = false;
         this.currentChoice = null;
         this.currentDice = [];
+        this.usedDice.clear();
         this.waitingForNewRoll = true;
         
         // Clear previous state

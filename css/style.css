@@ -183,4 +183,16 @@ body {
     color: #666;
     font-size: 0.8em;
     margin-top: 5px;
+}
+
+.die.used {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #333;
+    color: #666;
+}
+
+.die:not(.used):hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 } 

@@ -1,7 +1,7 @@
 export default {
     metadata: {
         title: "Rogue Signal",
-        version: "1.0.0",
+        version: "1.3.0",
         lastUpdated: "2024-03-19",
         author: "FutureStrike Team",
         description: "Track down a rogue AI that's taken over the city's automated systems",
