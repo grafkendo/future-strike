@@ -10,7 +10,8 @@ class StoryRegistry {
             const storyModules = [
                 { id: 'last_backup', path: './stories/last_backup.js' },
                 { id: 'neural_heist', path: './stories/neural_heist.js' },
-                { id: 'rogue_signal', path: './stories/rogue_signal.js' }
+                { id: 'rogue_signal', path: './stories/rogue_signal.js' },
+                { id: 'debug_story', path: './stories/debug_story.js' }
             ];
 
             for (const module of storyModules) {

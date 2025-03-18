@@ -39,13 +39,16 @@
                 const card = document.createElement('div');
                 card.className = 'adventure-card';
                 card.innerHTML = `
-                    <h2>${story.metadata.title} <span class="version">v${story.metadata.version}</span></h2>
+                    <h2>
+                        ${story.metadata.title}
+                        <span class="version-info">v${story.metadata.version}</span>
+                    </h2>
                     <p class="description">${story.metadata.description}</p>
                     <div class="story-info">
                         <p>Difficulty: ${story.metadata.difficulty}</p>
                         <p>Time: ${story.metadata.estimatedTime}</p>
                         <p>Author: ${story.metadata.author}</p>
-                        <p class="update-date">Last Updated: ${story.metadata.lastUpdated}</p>
+                        <p class="story-metadata">Last Updated: ${story.metadata.lastUpdated}</p>
                     </div>
                     <a href="game.html?story=${story.id}" class="button">BEGIN_MISSION.exe</a>
                 `;

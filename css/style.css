@@ -169,4 +169,18 @@ body {
     color: #00ffff;
     margin: 0 0 10px 0;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Add to existing styles */
+.version-info {
+    color: #00ff00;
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-left: 10px;
+}
+
+.story-metadata {
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 5px;
 } 

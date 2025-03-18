@@ -8,6 +8,13 @@ class Game {
         this.currentChoice = null;
         this.rollConfirmed = false;
         this.waitingForNewRoll = true;
+        this.usedDice = new Set();
+        
+        console.log('Game initialized with:', {
+            storyId: this.storyId,
+            currentScene: this.currentScene,
+            usedDice: this.usedDice
+        });
         
         // Initialize game asynchronously
         this.init();
@@ -27,6 +34,12 @@ class Game {
 
             // Set initial health from story config
             this.health = this.story.gameConfig.startingHealth;
+            
+            console.log('Story loaded successfully:', {
+                title: this.story.metadata.title,
+                currentScene: this.currentScene,
+                health: this.health
+            });
             
             // Initialize game state
             this.initializeGame();
@@ -135,6 +148,10 @@ class Game {
     }
 
     displayScene(scene) {
+        console.log('Displaying scene:', scene);
+        console.log('Current dice:', this.currentDice);
+        console.log('Used dice:', Array.from(this.usedDice));
+        
         const storyText = document.querySelector('.story-text');
         const choices = document.querySelector('.choices');
         
@@ -144,15 +161,16 @@ class Game {
         }
 
         storyText.innerHTML = scene.text;
-        
-        // Clear existing choices
         choices.innerHTML = '';
         
-        // Create and append each choice button
-        scene.choices.forEach((choice, index) => {
+        scene.choices.forEach((choice, i) => {
+            const index = i + 1; // Start index at 1
+            console.log(`Creating button with index ${index} for choice:`, choice);
+            
             const button = document.createElement('button');
             button.className = 'choice-button';
-            button.dataset.index = index;
+            button.dataset.index = index; // Store 1-based index
+            
             button.innerHTML = `
                 <div class="choice-header">
                     [${choice.type}]
@@ -160,14 +178,41 @@ class Game {
                 ${choice.text}
             `;
             
-            // Add click listener directly to new button
             button.addEventListener('click', () => {
-                if (this.rollConfirmed) {
-                    this.selectChoice(button);
-                }
+                console.log(`Action ${index} clicked:`, {
+                    rollConfirmed: this.rollConfirmed,
+                    availableDice: this.currentDice.filter((_, i) => !this.usedDice.has(i)),
+                    choice: choice
+                });
+                this.selectChoice(button);
             });
             
             choices.appendChild(button);
+        });
+    }
+
+    selectChoice(buttonElement) {
+        const index = parseInt(buttonElement.dataset.index); // This will be 1-based
+        console.log('selectChoice called with display index:', index);
+        
+        // Don't subtract 1 here anymore - keep using 1-based indexing
+        if (isNaN(index) || index < 1 || index > this.story.scenes[this.currentScene].choices.length) {
+            console.error('Invalid choice index:', index);
+            return;
+        }
+        
+        document.querySelectorAll('.choice-button').forEach(btn => 
+            btn.classList.remove('selected'));
+        
+        buttonElement.classList.add('selected');
+        this.currentChoice = index; // Store the 1-based index
+        
+        document.querySelectorAll('.die').forEach(die => 
+            die.classList.add('available'));
+        
+        console.log('Choice selected:', {
+            displayIndex: index,
+            choice: this.story.scenes[this.currentScene].choices[index - 1] // Only convert to 0-based when accessing array
         });
     }
 
@@ -209,27 +254,6 @@ class Game {
         });
     }
 
-    selectChoice(buttonElement) {
-        // Clear any previous selections
-        document.querySelectorAll('.choice-button').forEach(btn => 
-            btn.classList.remove('selected'));
-        
-        // Get and validate the choice index
-        const index = parseInt(buttonElement.dataset.index);
-        if (isNaN(index)) {
-            console.error('Invalid choice index');
-            return;
-        }
-        
-        // Update selection
-        buttonElement.classList.add('selected');
-        this.currentChoice = index;
-        
-        // Enable dice for selection
-        document.querySelectorAll('.die').forEach(die => 
-            die.classList.add('available'));
-    }
-
     selectDie(index) {
         if (!this.currentChoice) return;
         
@@ -245,11 +269,20 @@ class Game {
 
     getCurrentDifficulty() {
         const scene = this.story.scenes[this.currentScene];
-        if (!scene || !scene.choices || !scene.choices[this.currentChoice]) {
+        console.log('Getting difficulty for:', {
+            scene: this.currentScene,
+            choice: this.currentChoice, // Now 1-based
+            sceneData: scene
+        });
+        
+        if (!scene || !scene.choices || !scene.choices[this.currentChoice - 1]) { // Convert to 0-based for array access
             console.error('Invalid scene or choice');
-            return 3; // Default difficulty if something goes wrong
+            return 3;
         }
-        return scene.choices[this.currentChoice].difficulty;
+        
+        const difficulty = scene.choices[this.currentChoice - 1].difficulty; // Convert to 0-based for array access
+        console.log('Difficulty value:', difficulty);
+        return difficulty;
     }
 
     calculateOutcome(dieValue, difficulty) {
