@@ -4,7 +4,6 @@
     <title>The Last Backup - FutureStrike RPG</title>
     <link rel="stylesheet" href="../../shared/css/story.css">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <script src="game.js" defer></script>
 </head>
 <body>
     <nav>
@@ -21,9 +20,7 @@
                 <input type="number" min="1" max="6" class="dice-box" maxlength="1">
                 <button id="roll-submit">CONFIRM_ROLL</button>
             </div>
-            <div class="current-dice">
-                <!-- Dice will be displayed here as clickable elements -->
-            </div>
+            <div class="current-dice"></div>
         </div>
 
         <div class="status-panel">
@@ -34,20 +31,18 @@
             <div class="current-scene">SCENE: 1</div>
         </div>
 
-        <div class="story-panel">
-            <div class="scene-text">
-                <!-- Current scene text will be displayed here -->
+        <div class="main-display">
+            <div class="story-panel">
+                <div class="story-text"></div>
+                <div class="outcome-text"></div>
             </div>
-            <div class="choices">
-                <!-- Choices will be displayed here -->
-            </div>
-        </div>
-
-        <div class="outcome-panel">
-            <div class="outcome-text">
-                <!-- Results will be displayed here -->
+            <div class="choices-panel">
+                <div class="choices"></div>
             </div>
         </div>
     </div>
+
+    <!-- Make sure script is loaded after HTML -->
+    <script src="game.js"></script>
 </body>
 </html>

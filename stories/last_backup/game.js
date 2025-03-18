@@ -3,16 +3,31 @@ class Game {
         this.health = 20;
         this.currentScene = 1;
         this.currentDice = [];
+        this.currentChoice = null;
+        
+        // Wait for DOM to be fully loaded before initializing
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.initializeGame();
+            });
+        } else {
+            this.initializeGame();
+        }
+    }
+
+    initializeGame() {
         this.setupEventListeners();
+        this.loadScene(1);
     }
 
     setupEventListeners() {
-        // Dice input handling
-        document.getElementById('roll-submit').addEventListener('click', () => {
-            this.submitDiceRoll();
-        });
+        const rollSubmitButton = document.getElementById('roll-submit');
+        if (rollSubmitButton) {
+            rollSubmitButton.addEventListener('click', () => {
+                this.submitDiceRoll();
+            });
+        }
 
-        // Enhanced dice input validation
         const diceBoxes = document.querySelectorAll('.dice-box');
         diceBoxes.forEach((box, index) => {
             // Prevent invalid input
@@ -31,13 +46,10 @@ class Game {
             // Clean invalid values and auto-advance
             box.addEventListener('input', (e) => {
                 let value = e.target.value;
-                
-                // Ensure single digit 1-6
                 value = value.slice(0, 1);
                 value = Math.min(Math.max(parseInt(value) || 1, 1), 6);
                 e.target.value = value;
 
-                // Auto-advance to next box
                 if (value && index < diceBoxes.length - 1) {
                     diceBoxes[index + 1].focus();
                 }
@@ -122,6 +134,10 @@ class Game {
 
         this.updateHealth(healthCost);
         this.displayOutcome(outcome, healthCost);
+        
+        // Hide dice panel after roll
+        document.querySelector('.dice-panel').style.display = 'none';
+        document.querySelector('.outcome-text').style.display = 'block';
     }
 
     updateHealth(cost) {
@@ -162,9 +178,83 @@ class Game {
         });
         document.querySelectorAll('.dice-box')[0].focus();
     }
+
+    loadScene(sceneNumber) {
+        // Example scene data - this would come from a separate story file
+        const sceneData = {
+            1: {
+                text: "You're a low-level data courier in Neo-Shanghai. Your neural implants ping with an encrypted message from your old mentor, Zhang. He needs a meet - urgent. Something about a 'last backup.'",
+                choices: [
+                    {
+                        text: "Take the crowded street level",
+                        difficulty: 2,
+                        type: "Light"
+                    },
+                    {
+                        text: "Navigate maintenance tunnels",
+                        difficulty: 3,
+                        type: "Medium"
+                    },
+                    {
+                        text: "Ride the elevated mag-train",
+                        difficulty: 3,
+                        type: "Light"
+                    }
+                ]
+            }
+        };
+
+        const scene = sceneData[sceneNumber];
+        if (scene) {
+            this.displayScene(scene);
+        }
+    }
+
+    displayScene(scene) {
+        const storyText = document.querySelector('.story-text');
+        const choices = document.querySelector('.choices');
+        
+        if (!storyText || !choices) {
+            console.error('Required DOM elements not found');
+            return;
+        }
+
+        storyText.innerHTML = scene.text;
+        choices.innerHTML = scene.choices.map((choice, index) => `
+            <button class="choice-button" data-index="${index}">
+                <div class="choice-header">
+                    [Difficulty: ${choice.difficulty}] [${choice.type}]
+                </div>
+                ${choice.text}
+            </button>
+        `).join('');
+
+        // Add choice listeners
+        document.querySelectorAll('.choice-button').forEach(button => {
+            button.addEventListener('click', () => this.selectChoice(button));
+        });
+    }
+
+    selectChoice(buttonElement) {
+        // Remove previous selection
+        document.querySelectorAll('.choice-button').forEach(btn => 
+            btn.classList.remove('selected'));
+        
+        // Select new choice
+        buttonElement.classList.add('selected');
+        this.currentChoice = parseInt(buttonElement.dataset.index);
+        
+        // Show dice input
+        document.querySelector('.dice-panel').style.display = 'block';
+        
+        // Clear previous roll
+        this.clearDiceInput();
+        document.querySelector('.current-dice').innerHTML = '';
+        document.querySelector('.outcome-text').style.display = 'none';
+    }
 }
 
 // Initialize game when page loads
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const game = new Game();
 }); 
