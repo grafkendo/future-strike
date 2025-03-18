@@ -7,6 +7,7 @@ class Game {
         this.currentDice = [];
         this.currentChoice = null;
         this.rollConfirmed = false;
+        this.waitingForNewRoll = true;
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initializeGame());
@@ -68,29 +69,31 @@ class Game {
     updateGameState() {
         const choices = document.querySelectorAll('.choice-button');
         const dice = document.querySelectorAll('.die');
+        const rollPrompt = document.querySelector('.roll-prompt');
+        const dicePanel = document.querySelector('.dice-panel');
         
-        if (!this.rollConfirmed) {
-            // Waiting for dice roll
+        if (this.waitingForNewRoll) {
+            // Need new dice roll
+            dicePanel.style.display = 'block';
+            rollPrompt.style.display = 'block';
             choices.forEach(choice => choice.classList.remove('available'));
             dice.forEach(die => die.classList.remove('available'));
-            document.querySelector('.roll-prompt').style.display = 'block';
-        } else if (!this.currentChoice) {
-            // Roll confirmed, waiting for choice
+        } else if (this.rollConfirmed && !this.currentChoice) {
+            // Have dice, waiting for action selection
+            rollPrompt.style.display = 'none';
             choices.forEach(choice => choice.classList.add('available'));
-            dice.forEach(die => die.classList.remove('available'));
-            document.querySelector('.roll-prompt').style.display = 'none';
-        } else {
-            // Choice made, waiting for die selection
-            choices.forEach(choice => choice.classList.remove('available'));
             dice.forEach(die => die.classList.add('available'));
         }
     }
 
     loadScene(sceneNumber) {
         const scene = this.story.scenes[sceneNumber];
-        if (scene) {
-            this.displayScene(scene);
+        if (!scene) {
+            console.log("Story complete!");
+            this.displayEndGame();
+            return;
         }
+        this.displayScene(scene);
     }
 
     displayScene(scene) {
@@ -103,19 +106,24 @@ class Game {
         }
 
         storyText.innerHTML = scene.text;
-        choices.innerHTML = scene.choices.map((choice, index) => `
-            <button class="choice-button" data-index="${index}">
-                <div class="choice-header">
-                    [Difficulty: ${choice.difficulty}] [${choice.type}]
-                </div>
-                ${choice.text}
-            </button>
-        `).join('');
+        
+        if (scene.choices && scene.choices.length > 0) {
+            choices.innerHTML = scene.choices.map((choice, index) => `
+                <button class="choice-button" data-index="${index}">
+                    <div class="choice-header">
+                        [Difficulty: ${choice.difficulty}] [${choice.type}]
+                    </div>
+                    ${choice.text}
+                </button>
+            `).join('');
 
-        // Add choice listeners
-        document.querySelectorAll('.choice-button').forEach(button => {
-            button.addEventListener('click', () => this.selectChoice(button));
-        });
+            // Add choice listeners
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.addEventListener('click', () => this.selectChoice(button));
+            });
+        } else {
+            choices.innerHTML = '<p>End of story reached.</p>';
+        }
     }
 
     submitDiceRoll() {
@@ -126,6 +134,7 @@ class Game {
         if (diceValues.length === 5) {
             this.currentDice = diceValues;
             this.rollConfirmed = true;
+            this.waitingForNewRoll = false;
             this.displayDice();
             this.clearDiceInput();
             this.updateGameState();
@@ -163,7 +172,6 @@ class Game {
         
         buttonElement.classList.add('selected');
         this.currentChoice = parseInt(buttonElement.dataset.index);
-        this.updateGameState();
     }
 
     selectDie(index) {
@@ -173,19 +181,18 @@ class Game {
         const difficulty = this.getCurrentDifficulty();
         this.calculateOutcome(value, difficulty);
         
-        // Reset for next action
+        // Progress to next scene after outcome
         setTimeout(() => {
-            this.rollConfirmed = false;
-            this.currentChoice = null;
-            this.currentDice = [];
-            this.clearDiceInput();
-            this.updateGameState();
-            // Load next scene or choices here
+            this.advanceStory();
         }, 2000);
     }
 
     getCurrentDifficulty() {
         const scene = this.story.scenes[this.currentScene];
+        if (!scene || !scene.choices || !scene.choices[this.currentChoice]) {
+            console.error('Invalid scene or choice');
+            return 3; // Default difficulty if something goes wrong
+        }
         return scene.choices[this.currentChoice].difficulty;
     }
 
@@ -225,6 +232,7 @@ class Game {
         outcomePanel.innerHTML = `
             <h3>${outcome}</h3>
             <p>Health cost: ${healthCost}</p>
+            <p class="continue-prompt">Continuing in 2 seconds...</p>
         `;
         outcomePanel.style.display = 'block';
     }
@@ -235,6 +243,42 @@ class Game {
             box.style.borderColor = '#ff69b4';
         });
         document.querySelectorAll('.dice-box')[0].focus();
+    }
+
+    displayEndGame() {
+        const storyText = document.querySelector('.story-text');
+        const choices = document.querySelector('.choices');
+        const dicePanel = document.querySelector('.dice-panel');
+        
+        if (storyText) {
+            storyText.innerHTML = "Mission Complete. Final Health: " + this.health + "/20";
+        }
+        if (choices) {
+            choices.innerHTML = '<a href="index.html" class="choice-button">Return to Main Menu</a>';
+        }
+        if (dicePanel) {
+            dicePanel.style.display = 'none';
+        }
+    }
+
+    advanceStory() {
+        // Reset game state
+        this.rollConfirmed = false;
+        this.currentChoice = null;
+        this.currentDice = [];
+        this.waitingForNewRoll = true;
+        
+        // Clear previous state
+        this.clearDiceInput();
+        document.querySelector('.current-dice').innerHTML = '';
+        document.querySelector('.outcome-text').style.display = 'none';
+        
+        // Load next scene
+        this.currentScene++;
+        this.loadScene(this.currentScene);
+        
+        // Update game state for new roll
+        this.updateGameState();
     }
 }
 

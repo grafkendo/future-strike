@@ -24,10 +24,45 @@ const STORIES = {
                 ]
             },
             2: {
-                text: "The streets are more active than usual. Corporate drones everywhere.",
-                // Add more scene content
+                text: "The streets are packed with corporate wage slaves and street vendors. Your neural implants highlight multiple surveillance zones ahead.",
+                choices: [
+                    {
+                        text: "Blend with the crowd",
+                        difficulty: 2,
+                        type: "Light"
+                    },
+                    {
+                        text: "Use back alleys",
+                        difficulty: 4,
+                        type: "Medium"
+                    },
+                    {
+                        text: "Create a distraction",
+                        difficulty: 3,
+                        type: "Light"
+                    }
+                ]
+            },
+            3: {
+                text: "You spot Zhang's meeting spot - an old noodle stand. But something feels off...",
+                choices: [
+                    {
+                        text: "Approach directly",
+                        difficulty: 2,
+                        type: "Light"
+                    },
+                    {
+                        text: "Scan for threats",
+                        difficulty: 3,
+                        type: "Medium"
+                    },
+                    {
+                        text: "Contact Zhang",
+                        difficulty: 4,
+                        type: "Heavy"
+                    }
+                ]
             }
-            // Add more scenes
         }
     }
     // Add more stories here
