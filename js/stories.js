@@ -8,7 +8,7 @@ const STORIES = {
                 choices: [
                     {
                         text: "Take the crowded street level",
-                        difficulty: 2,
+                        difficulty: 4,
                         type: "Light"
                     },
                     {
@@ -28,7 +28,7 @@ const STORIES = {
                 choices: [
                     {
                         text: "Blend with the crowd",
-                        difficulty: 2,
+                        difficulty: 3,
                         type: "Light"
                     },
                     {
@@ -48,7 +48,7 @@ const STORIES = {
                 choices: [
                     {
                         text: "Approach directly",
-                        difficulty: 2,
+                        difficulty: 3,
                         type: "Light"
                     },
                     {

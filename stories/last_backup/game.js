@@ -219,7 +219,7 @@ class Game {
                 choices: [
                     {
                         text: "Take the crowded street level",
-                        difficulty: 2,
+                        difficulty: 3,
                         type: "Light"
                     },
                     {

@@ -1,7 +1,7 @@
 class Game {
     constructor(storyId) {
         this.storyId = storyId;
-        this.story = STORIES[storyId];
+        this.story = null;
         this.health = 20;
         this.currentScene = 1;
         this.currentDice = [];
@@ -9,16 +9,42 @@ class Game {
         this.rollConfirmed = false;
         this.waitingForNewRoll = true;
         
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeGame());
-        } else {
+        // Initialize game asynchronously
+        this.init();
+    }
+
+    async init() {
+        try {
+            // Import story loader
+            const { loadStory } = await import('./story-loader.js');
+            
+            // Load the story
+            this.story = await loadStory(this.storyId);
+            
+            if (!this.story) {
+                throw new Error('Failed to load story');
+            }
+
+            // Set initial health from story config
+            this.health = this.story.gameConfig.startingHealth;
+            
+            // Initialize game state
             this.initializeGame();
+            
+        } catch (error) {
+            console.error('Game initialization failed:', error);
+            this.displayError('Failed to load story. Please try again.');
         }
     }
 
     initializeGame() {
+        if (!this.story) {
+            console.error('Story not loaded');
+            return;
+        }
+        
+        this.loadScene(this.currentScene);
         this.setupEventListeners();
-        this.loadScene(1);
         this.updateGameState();
     }
 
@@ -95,9 +121,13 @@ class Game {
     }
 
     loadScene(sceneNumber) {
+        if (!this.story || !this.story.scenes) {
+            console.error('Story or scenes not loaded');
+            return;
+        }
+
         const scene = this.story.scenes[sceneNumber];
         if (!scene) {
-            console.log("Story complete!");
             this.displayEndGame();
             return;
         }
@@ -115,23 +145,30 @@ class Game {
 
         storyText.innerHTML = scene.text;
         
-        if (scene.choices && scene.choices.length > 0) {
-            choices.innerHTML = scene.choices.map((choice, index) => `
-                <button class="choice-button" data-index="${index}">
-                    <div class="choice-header">
-                        [Difficulty: ${choice.difficulty}] [${choice.type}]
-                    </div>
-                    ${choice.text}
-                </button>
-            `).join('');
-
-            // Add choice listeners
-            document.querySelectorAll('.choice-button').forEach(button => {
-                button.addEventListener('click', () => this.selectChoice(button));
+        // Clear existing choices
+        choices.innerHTML = '';
+        
+        // Create and append each choice button
+        scene.choices.forEach((choice, index) => {
+            const button = document.createElement('button');
+            button.className = 'choice-button';
+            button.dataset.index = index;
+            button.innerHTML = `
+                <div class="choice-header">
+                    [${choice.type}]
+                </div>
+                ${choice.text}
+            `;
+            
+            // Add click listener directly to new button
+            button.addEventListener('click', () => {
+                if (this.rollConfirmed) {
+                    this.selectChoice(button);
+                }
             });
-        } else {
-            choices.innerHTML = '<p>End of story reached.</p>';
-        }
+            
+            choices.appendChild(button);
+        });
     }
 
     submitDiceRoll() {
@@ -173,13 +210,24 @@ class Game {
     }
 
     selectChoice(buttonElement) {
-        if (!this.rollConfirmed) return;
-        
+        // Clear any previous selections
         document.querySelectorAll('.choice-button').forEach(btn => 
             btn.classList.remove('selected'));
         
+        // Get and validate the choice index
+        const index = parseInt(buttonElement.dataset.index);
+        if (isNaN(index)) {
+            console.error('Invalid choice index');
+            return;
+        }
+        
+        // Update selection
         buttonElement.classList.add('selected');
-        this.currentChoice = parseInt(buttonElement.dataset.index);
+        this.currentChoice = index;
+        
+        // Enable dice for selection
+        document.querySelectorAll('.die').forEach(die => 
+            die.classList.add('available'));
     }
 
     selectDie(index) {
@@ -296,13 +344,19 @@ class Game {
             box.value = randomValue;
         });
     }
+
+    displayError(message) {
+        const errorPanel = document.querySelector('.error-text');
+        errorPanel.textContent = message;
+        errorPanel.style.display = 'block';
+    }
 }
 
-// Get story ID from URL parameter
-const urlParams = new URLSearchParams(window.location.search);
-const storyId = urlParams.get('story') || 'last_backup';
-
-// Initialize game when page loads
+// Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new Game(storyId);
+    const urlParams = new URLSearchParams(window.location.search);
+    const storyId = urlParams.get('story') || 'last_backup';
+    
+    // Create game instance
+    window.game = new Game(storyId);
 }); 

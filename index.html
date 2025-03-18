@@ -17,7 +17,7 @@
     </div>
 
     <script type="module">
-        import { AVAILABLE_STORIES } from './js/story-loader.js';
+        import { getAvailableStories } from './js/story-loader.js';
 
         // Load ASCII art
         async function loadAsciiArt() {
@@ -30,17 +30,23 @@
             }
         }
 
-        function loadStories() {
+        async function loadStories() {
             const storyList = document.getElementById('story-list');
+            storyList.innerHTML = ''; // Clear existing content
             
-            AVAILABLE_STORIES.forEach(story => {
+            const stories = await getAvailableStories();
+            stories.forEach(story => {
                 const card = document.createElement('div');
                 card.className = 'adventure-card';
                 card.innerHTML = `
-                    <h2>${story.metadata.title}</h2>
-                    <p>${story.metadata.description}</p>
-                    <p>Difficulty: ${story.metadata.difficulty}</p>
-                    <p>Estimated Time: ${story.metadata.estimatedTime}</p>
+                    <h2>${story.metadata.title} <span class="version">v${story.metadata.version}</span></h2>
+                    <p class="description">${story.metadata.description}</p>
+                    <div class="story-info">
+                        <p>Difficulty: ${story.metadata.difficulty}</p>
+                        <p>Time: ${story.metadata.estimatedTime}</p>
+                        <p>Author: ${story.metadata.author}</p>
+                        <p class="update-date">Last Updated: ${story.metadata.lastUpdated}</p>
+                    </div>
                     <a href="game.html?story=${story.id}" class="button">BEGIN_MISSION.exe</a>
                 `;
                 storyList.appendChild(card);
@@ -53,20 +59,19 @@
             const storySelect = document.getElementById('story-select');
             
             titleScreen.classList.add('fade-out');
-            setTimeout(() => {
+            setTimeout(async () => {
                 titleScreen.classList.add('hidden');
                 storySelect.classList.remove('hidden');
                 storySelect.classList.add('fade-in');
+                await loadStories(); // Load stories when transitioning to selection screen
             }, 1000);
             
-            // Remove event listener after transition
             document.removeEventListener('keypress', handleKeyPress);
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             await loadAsciiArt();
-            loadStories();
             document.addEventListener('keypress', handleKeyPress);
         });
     </script>
