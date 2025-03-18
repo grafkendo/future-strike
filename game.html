@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FutureStrike RPG - Game Console</title>
+    <link rel="stylesheet" href="css/game.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <a href="index.html">← RETURN_TO_MAIN.exe</a>
+    </nav>
+
+    <div class="game-interface">
+        <div class="dice-panel">
+            <div class="roll-prompt">SYSTEM: Roll 5d6 and confirm results</div>
+            <div class="dice-input">
+                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                <button id="roll-submit">CONFIRM_ROLL</button>
+            </div>
+            <div class="current-dice"></div>
+        </div>
+
+        <div class="status-panel">
+            <div class="health-bar">
+                <label>HEALTH: </label>
+                <div class="health-value">20/20</div>
+            </div>
+            <div class="current-scene">SCENE: 1</div>
+        </div>
+
+        <div class="main-display">
+            <div class="story-panel">
+                <div class="story-text"></div>
+                <div class="outcome-text"></div>
+            </div>
+            <div class="choices-panel">
+                <div class="choices"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/stories.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html> 

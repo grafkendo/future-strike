@@ -1,16 +1,15 @@
 class Game {
-    constructor() {
+    constructor(storyId) {
+        this.storyId = storyId;
+        this.story = STORIES[storyId];
         this.health = 20;
         this.currentScene = 1;
         this.currentDice = [];
         this.currentChoice = null;
         this.rollConfirmed = false;
         
-        // Wait for DOM to be fully loaded before initializing
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.initializeGame();
-            });
+            document.addEventListener('DOMContentLoaded', () => this.initializeGame());
         } else {
             this.initializeGame();
         }
@@ -87,6 +86,38 @@ class Game {
         }
     }
 
+    loadScene(sceneNumber) {
+        const scene = this.story.scenes[sceneNumber];
+        if (scene) {
+            this.displayScene(scene);
+        }
+    }
+
+    displayScene(scene) {
+        const storyText = document.querySelector('.story-text');
+        const choices = document.querySelector('.choices');
+        
+        if (!storyText || !choices) {
+            console.error('Required DOM elements not found');
+            return;
+        }
+
+        storyText.innerHTML = scene.text;
+        choices.innerHTML = scene.choices.map((choice, index) => `
+            <button class="choice-button" data-index="${index}">
+                <div class="choice-header">
+                    [Difficulty: ${choice.difficulty}] [${choice.type}]
+                </div>
+                ${choice.text}
+            </button>
+        `).join('');
+
+        // Add choice listeners
+        document.querySelectorAll('.choice-button').forEach(button => {
+            button.addEventListener('click', () => this.selectChoice(button));
+        });
+    }
+
     submitDiceRoll() {
         const diceValues = Array.from(document.querySelectorAll('.dice-box'))
             .map(box => parseInt(box.value))
@@ -124,6 +155,17 @@ class Game {
         });
     }
 
+    selectChoice(buttonElement) {
+        if (!this.rollConfirmed) return;
+        
+        document.querySelectorAll('.choice-button').forEach(btn => 
+            btn.classList.remove('selected'));
+        
+        buttonElement.classList.add('selected');
+        this.currentChoice = parseInt(buttonElement.dataset.index);
+        this.updateGameState();
+    }
+
     selectDie(index) {
         if (!this.currentChoice) return;
         
@@ -140,6 +182,11 @@ class Game {
             this.updateGameState();
             // Load next scene or choices here
         }, 2000);
+    }
+
+    getCurrentDifficulty() {
+        const scene = this.story.scenes[this.currentScene];
+        return scene.choices[this.currentChoice].difficulty;
     }
 
     calculateOutcome(dieValue, difficulty) {
@@ -166,22 +213,11 @@ class Game {
 
         this.updateHealth(healthCost);
         this.displayOutcome(outcome, healthCost);
-        
-        // Hide dice panel after roll
-        document.querySelector('.dice-panel').style.display = 'none';
-        document.querySelector('.outcome-text').style.display = 'block';
     }
 
     updateHealth(cost) {
         this.health = Math.max(0, this.health - cost);
         document.querySelector('.health-value').textContent = `${this.health}/20`;
-        
-        // Visual feedback for health changes
-        const healthDisplay = document.querySelector('.health-value');
-        healthDisplay.style.color = '#ff0000';
-        setTimeout(() => {
-            healthDisplay.style.color = '#ff69b4';
-        }, 1000);
     }
 
     displayOutcome(outcome, healthCost) {
@@ -190,17 +226,7 @@ class Game {
             <h3>${outcome}</h3>
             <p>Health cost: ${healthCost}</p>
         `;
-        
-        // Visual feedback for outcome
-        outcomePanel.style.opacity = '0';
-        setTimeout(() => {
-            outcomePanel.style.opacity = '1';
-        }, 100);
-    }
-
-    getCurrentDifficulty() {
-        // This would be set based on the current scene and choice
-        return 3; // Default medium difficulty
+        outcomePanel.style.display = 'block';
     }
 
     clearDiceInput() {
@@ -210,76 +236,13 @@ class Game {
         });
         document.querySelectorAll('.dice-box')[0].focus();
     }
-
-    loadScene(sceneNumber) {
-        // Example scene data - this would come from a separate story file
-        const sceneData = {
-            1: {
-                text: "You're a low-level data courier in Neo-Shanghai. Your neural implants ping with an encrypted message from your old mentor, Zhang. He needs a meet - urgent. Something about a 'last backup.'",
-                choices: [
-                    {
-                        text: "Take the crowded street level",
-                        difficulty: 2,
-                        type: "Light"
-                    },
-                    {
-                        text: "Navigate maintenance tunnels",
-                        difficulty: 3,
-                        type: "Medium"
-                    },
-                    {
-                        text: "Ride the elevated mag-train",
-                        difficulty: 3,
-                        type: "Light"
-                    }
-                ]
-            }
-        };
-
-        const scene = sceneData[sceneNumber];
-        if (scene) {
-            this.displayScene(scene);
-        }
-    }
-
-    displayScene(scene) {
-        const storyText = document.querySelector('.story-text');
-        const choices = document.querySelector('.choices');
-        
-        if (!storyText || !choices) {
-            console.error('Required DOM elements not found');
-            return;
-        }
-
-        storyText.innerHTML = scene.text;
-        choices.innerHTML = scene.choices.map((choice, index) => `
-            <button class="choice-button" data-index="${index}">
-                <div class="choice-header">
-                    [Difficulty: ${choice.difficulty}] [${choice.type}]
-                </div>
-                ${choice.text}
-            </button>
-        `).join('');
-
-        // Add choice listeners
-        document.querySelectorAll('.choice-button').forEach(button => {
-            button.addEventListener('click', () => this.selectChoice(button));
-        });
-    }
-
-    selectChoice(buttonElement) {
-        if (!this.rollConfirmed) return;
-        
-        document.querySelectorAll('.choice-button').forEach(btn => 
-            btn.classList.remove('selected'));
-        
-        buttonElement.classList.add('selected');
-        this.currentChoice = parseInt(buttonElement.dataset.index);
-        this.updateGameState();
-    }
 }
+
+// Get story ID from URL parameter
+const urlParams = new URLSearchParams(window.location.search);
+const storyId = urlParams.get('story') || 'last_backup';
 
 // Initialize game when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new Game();
+    const game = new Game(storyId);
 }); 

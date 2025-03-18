@@ -1,0 +1,273 @@
+/* Base styles */
+body {
+    background-color: #000000;
+    color: #ff69b4;
+    font-family: 'Share Tech Mono', monospace;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Navigation */
+nav {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 4;
+}
+
+nav a {
+    color: #00ffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+/* Game interface container */
+.game-interface {
+    width: 800px;
+    height: 600px;
+    background: #000000;
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 20px #00ffff,
+                inset 0 0 20px #00ffff;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+}
+
+/* Scanline effect */
+.game-interface::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        transparent 50%,
+        rgba(0, 0, 0, 0.5) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanlines 1s linear infinite;
+    opacity: 0.3;
+    z-index: 2;
+}
+
+/* CRT flicker effect */
+.game-interface::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+}
+
+/* Dice panel */
+.dice-panel {
+    display: block;
+    padding: 10px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid #00ffff;
+    margin-bottom: 5px;
+    z-index: 3;
+}
+
+.roll-prompt {
+    color: #ff69b4;
+    text-align: center;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    animation: blink 2s infinite;
+}
+
+.dice-input {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.dice-box {
+    width: 35px;
+    height: 35px;
+    background: #000;
+    border: 2px solid #ff69b4;
+    color: #ff69b4;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* Main display area */
+.main-display {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 10px;
+    height: 400px;
+    position: relative;
+    z-index: 3;
+    margin: 10px;
+}
+
+.story-panel {
+    border: 1px solid #00ffff;
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.05);
+    overflow-y: auto;
+    height: 100%;
+}
+
+.story-text {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    white-space: pre-line;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+.story-text::after {
+    content: '█';
+    animation: cursor-blink 1s step-end infinite;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+    opacity: 0.7;
+    margin-left: 2px;
+}
+
+.choices-panel {
+    border: 1px solid #ff69b4;
+    padding: 10px;
+    background: rgba(255, 105, 180, 0.05);
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* Status panel */
+.status-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border: 1px solid #ff69b4;
+    background: rgba(255, 105, 180, 0.05);
+    z-index: 3;
+}
+
+/* Choice buttons */
+.choice-button {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #ff69b4;
+    color: #ff69b4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.choice-button.available {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.choice-button:hover {
+    background: rgba(255, 105, 180, 0.2);
+    box-shadow: 0 0 10px #ff69b4;
+}
+
+.choice-button.selected {
+    background: rgba(255, 105, 180, 0.3);
+    border-color: #00ffff;
+}
+
+/* Dice display */
+.current-dice {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.die {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #00ffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(0, 255, 255, 0.05);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.die.available {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.die:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 10px #00ffff;
+}
+
+/* Animations */
+@keyframes scanlines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+}
+
+@keyframes flicker {
+    0% { opacity: 0.27861; }
+    5% { opacity: 0.34769; }
+    10% { opacity: 0.23604; }
+    15% { opacity: 0.90626; }
+    20% { opacity: 0.18128; }
+    25% { opacity: 0.83891; }
+    30% { opacity: 0.65583; }
+    35% { opacity: 0.67807; }
+    40% { opacity: 0.26559; }
+    45% { opacity: 0.84693; }
+    50% { opacity: 0.96019; }
+    55% { opacity: 0.08594; }
+    60% { opacity: 0.20313; }
+    65% { opacity: 0.71988; }
+    70% { opacity: 0.53455; }
+    75% { opacity: 0.37288; }
+    80% { opacity: 0.71428; }
+    85% { opacity: 0.70419; }
+    90% { opacity: 0.7003; }
+    95% { opacity: 0.36108; }
+    100% { opacity: 0.24387; }
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+} 
