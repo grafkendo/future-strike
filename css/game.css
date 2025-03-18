@@ -98,10 +98,20 @@ nav a {
 
 .dice-input {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+.dice-boxes {
+    display: flex;
     gap: 5px;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
+}
+
+.dice-controls {
+    display: flex;
+    gap: 10px;
 }
 
 .dice-box {
@@ -270,4 +280,48 @@ nav a {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+/* Add cyberpunk button styling */
+.cyber-button {
+    background: transparent;
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    padding: 8px 15px;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.cyber-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(0, 255, 255, 0.2),
+        transparent
+    );
+    transition: all 0.5s ease;
+}
+
+.cyber-button:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.cyber-button:hover:before {
+    left: 100%;
+}
+
+.cyber-button:active {
+    transform: scale(0.95);
 } 

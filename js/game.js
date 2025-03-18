@@ -64,6 +64,14 @@ class Game {
                 }
             });
         });
+
+        // Add random roll button listener
+        const randomRollButton = document.getElementById('random-roll');
+        if (randomRollButton) {
+            randomRollButton.addEventListener('click', () => {
+                this.generateRandomRoll();
+            });
+        }
     }
 
     updateGameState() {
@@ -279,6 +287,14 @@ class Game {
         
         // Update game state for new roll
         this.updateGameState();
+    }
+
+    generateRandomRoll() {
+        const diceBoxes = document.querySelectorAll('.dice-box');
+        diceBoxes.forEach(box => {
+            const randomValue = Math.floor(Math.random() * 6) + 1;
+            box.value = randomValue;
+        });
     }
 }
 

@@ -14,12 +14,17 @@
         <div class="dice-panel">
             <div class="roll-prompt">SYSTEM: Roll 5d6 and confirm results</div>
             <div class="dice-input">
-                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                <button id="roll-submit">CONFIRM_ROLL</button>
+                <div class="dice-boxes">
+                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                </div>
+                <div class="dice-controls">
+                    <button id="random-roll" class="cyber-button">RANDOM_ROLL.exe</button>
+                    <button id="roll-submit" class="cyber-button">CONFIRM_ROLL.exe</button>
+                </div>
             </div>
             <div class="current-dice"></div>
         </div>
