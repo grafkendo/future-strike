@@ -6,26 +6,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <pre class="ascii-art">
-███████╗██╗   ██╗████████╗██╗   ██╗██████╗ ███████╗███████╗████████╗██████╗ ██╗██╗  ██╗███████╗
-██╔════╝██║   ██║╚══██╔══╝██║   ██║██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗██║██║ ██╔╝██╔════╝
-█████╗  ██║   ██║   ██║   ██║   ██║██████╔╝█████╗  ███████╗   ██║   ██████╔╝██║█████╔╝ █████╗  
-██╔══╝  ██║   ██║   ██║   ██║   ██║██╔══██╗██╔══╝  ╚════██║   ██║   ██╔══██╗██║██╔═██╗ ██╔══╝  
-██║     ╚██████╔╝   ██║   ╚██████╔╝██║  ██║███████╗███████║   ██║   ██║  ██║██║██║  ██╗███████╗
-╚═╝      ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
-        </pre>
-        <h1>Available Adventures</h1>
-        <div class="adventure-list">
-            <div class="adventure-card">
-                <h2>The Last Backup</h2>
-                <p>A cyberpunk thriller in Neo-Shanghai</p>
-                <p>Difficulty: Medium</p>
-                <p>Estimated Time: 30-45 minutes</p>
-                <a href="game.html?story=last_backup" class="button">BEGIN_MISSION.exe</a>
-            </div>
-            <!-- More adventure cards can be added here -->
+    <div id="title-screen" class="title-screen">
+        <pre id="ascii-art" class="ascii-art"></pre>
+    </div>
+
+    <div id="story-select" class="container hidden">
+        <div id="story-list" class="adventure-list">
+            <!-- Stories will be loaded dynamically -->
         </div>
     </div>
+
+    <script type="module">
+        import { AVAILABLE_STORIES } from './js/story-loader.js';
+
+        // Load ASCII art
+        async function loadAsciiArt() {
+            try {
+                const response = await fetch('assets/ascii/logo.txt');
+                const art = await response.text();
+                document.getElementById('ascii-art').textContent = art;
+            } catch (error) {
+                console.error('Failed to load ASCII art:', error);
+            }
+        }
+
+        function loadStories() {
+            const storyList = document.getElementById('story-list');
+            
+            AVAILABLE_STORIES.forEach(story => {
+                const card = document.createElement('div');
+                card.className = 'adventure-card';
+                card.innerHTML = `
+                    <h2>${story.metadata.title}</h2>
+                    <p>${story.metadata.description}</p>
+                    <p>Difficulty: ${story.metadata.difficulty}</p>
+                    <p>Estimated Time: ${story.metadata.estimatedTime}</p>
+                    <a href="game.html?story=${story.id}" class="button">BEGIN_MISSION.exe</a>
+                `;
+                storyList.appendChild(card);
+            });
+        }
+
+        // Handle key press to transition screens
+        function handleKeyPress() {
+            const titleScreen = document.getElementById('title-screen');
+            const storySelect = document.getElementById('story-select');
+            
+            titleScreen.classList.add('fade-out');
+            setTimeout(() => {
+                titleScreen.classList.add('hidden');
+                storySelect.classList.remove('hidden');
+                storySelect.classList.add('fade-in');
+            }, 1000);
+            
+            // Remove event listener after transition
+            document.removeEventListener('keypress', handleKeyPress);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAsciiArt();
+            loadStories();
+            document.addEventListener('keypress', handleKeyPress);
+        });
+    </script>
 </body>
 </html> 
