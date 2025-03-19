@@ -522,4 +522,29 @@ nav a:hover {
     border-color: #666;
     color: #666;
     cursor: not-allowed;
+}
+
+/* Add to existing styles */
+.scene-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #00ffff;
+}
+
+.scene-number {
+    color: #00ffff;
+}
+
+.game-time {
+    color: #ff69b4;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1em;
+}
+
+.game-day {
+    color: #00ffff;
+    font-family: 'Share Tech Mono', monospace;
 } 

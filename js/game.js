@@ -17,6 +17,13 @@ class Game {
         this.currentLocation = 'apartment';
         this.visitedLocations = new Set(['apartment']);
         
+        // Add to existing properties
+        this.gameTime = {
+            hour: 21,    // Start at 9 PM
+            minute: 0,
+            day: 1
+        };
+        
         console.log('Game initialized, waiting for first roll');
         this.init();
     }
@@ -187,6 +194,7 @@ class Game {
         }
 
         this.updateLocations();
+        this.updateTimeDisplay();
     }
 
     displayScene(scene) {
@@ -389,6 +397,8 @@ class Game {
                 }, 2000);
             }
             
+            // Add time for successful action
+            this.updateGameTime(15);  // 15 minutes per action
         } else {
             outcome.textContent = 'FAILURE: Action failed. -2 Health';
             outcome.style.color = '#ff0000';
@@ -398,6 +408,9 @@ class Game {
             if (this.health <= 0) {
                 this.endGame();
             }
+            
+            // Failed actions take longer
+            this.updateGameTime(30);  // 30 minutes on failure
         }
 
         if (this.currentChoice) {
@@ -597,6 +610,9 @@ class Game {
         console.log(`Traveling to ${location}`);
         this.currentLocation = location;
         
+        // Add travel time
+        this.updateGameTime(30);  // 30 minutes for travel
+        
         // Load location-specific scene
         if (location === 'apartment') {
             this.loadApartmentScene();
@@ -640,6 +656,38 @@ class Game {
         };
         
         this.displayScene(apartmentScene);
+    }
+
+    updateGameTime(minutesElapsed = 15) {  // Default 15 minutes per action
+        this.gameTime.minute += minutesElapsed;
+        
+        // Handle hour rollover
+        while (this.gameTime.minute >= 60) {
+            this.gameTime.minute -= 60;
+            this.gameTime.hour += 1;
+            
+            // Handle day rollover
+            if (this.gameTime.hour >= 24) {
+                this.gameTime.hour -= 24;
+                this.gameTime.day += 1;
+            }
+        }
+        
+        this.updateTimeDisplay();
+    }
+
+    updateTimeDisplay() {
+        const currentScene = document.querySelector('.current-scene');
+        const timeString = `${String(this.gameTime.hour).padStart(2, '0')}:${String(this.gameTime.minute).padStart(2, '0')}`;
+        const dayString = `DAY ${this.gameTime.day}`;
+        
+        currentScene.innerHTML = `
+            <div class="scene-info">
+                <span class="scene-number">SCENE: ${this.currentScene}</span>
+                <span class="game-time">${timeString}</span>
+                <span class="game-day">${dayString}</span>
+            </div>
+        `;
     }
 }
 
