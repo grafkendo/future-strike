@@ -14,7 +14,7 @@ class GameEngine {
     }
 
     async loadStory() {
-        const { loadStory } = await import('./story-loader.js');
+        const { loadStory } = await import('../js/story-loader.js');
         this.story = await loadStory(this.storyId);
         
         if (this.story) {

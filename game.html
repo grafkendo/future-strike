@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FutureStrike RPG - Game Console</title>
-    <link rel="stylesheet" href="css/game.css">
+    <title>FutureStrike RPG - Game</title>
+    <link rel="stylesheet" href="css/style.css?v=1.3.0">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -11,44 +11,51 @@
     </nav>
 
     <div class="game-interface">
-        <div class="dice-panel">
-            <div class="roll-prompt">SYSTEM: Roll 5d6 and confirm results</div>
-            <div class="dice-input">
-                <div class="dice-boxes">
-                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                    <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
-                </div>
-                <div class="dice-controls">
-                    <button id="random-roll" class="cyber-button">RANDOM_ROLL.exe</button>
-                    <button id="roll-submit" class="cyber-button">CONFIRM_ROLL.exe</button>
-                </div>
-            </div>
-            <div class="current-dice"></div>
-        </div>
-
-        <div class="status-panel">
-            <div class="health-bar">
-                <label>HEALTH: </label>
-                <div class="health-value">20/20</div>
-            </div>
-            <div class="current-scene">SCENE: 1</div>
-        </div>
-
         <div class="main-display">
+            <!-- Left side: Story text -->
             <div class="story-panel">
                 <div class="story-text"></div>
                 <div class="outcome-text"></div>
             </div>
-            <div class="choices-panel">
-                <div class="choices"></div>
+
+            <!-- Right side: Game controls -->
+            <div class="game-controls">
+                <div class="status-panel">
+                    <div class="health-bar">
+                        <label>HEALTH: </label>
+                        <div class="health-value">20/20</div>
+                    </div>
+                    <div class="current-scene">SCENE: 1</div>
+                </div>
+
+                <div class="dice-panel">
+                    <div class="roll-prompt">SYSTEM: Roll 5d6 and confirm results</div>
+                    <div class="dice-input">
+                        <div class="dice-boxes">
+                            <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                            <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                            <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                            <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                            <input type="text" class="dice-box" maxlength="1" pattern="[1-6]">
+                        </div>
+                        <div class="dice-controls">
+                            <button id="random-roll" class="cyber-button">RANDOM_ROLL.exe</button>
+                            <button id="roll-submit" class="cyber-button">CONFIRM_ROLL.exe</button>
+                        </div>
+                    </div>
+                    <div class="current-dice"></div>
+                </div>
+
+                <div class="choices-panel">
+                    <div class="choices"></div>
+                </div>
             </div>
         </div>
+
+        <div class="error-text" style="display: none;"></div>
     </div>
 
-    <script src="js/stories.js"></script>
-    <script src="js/game.js"></script>
+    <script type="module" src="js/story-loader.js?v=1.3.0"></script>
+    <script type="module" src="js/game.js?v=1.3.0"></script>
 </body>
 </html> 

@@ -1,5 +1,8 @@
+console.log('game.js loading...');
+
 class Game {
     constructor(storyId) {
+        console.log('Game constructor called with storyId:', storyId);
         this.storyId = storyId;
         this.story = null;
         this.health = 20;
@@ -236,31 +239,39 @@ class Game {
         this.currentDice.forEach((value, index) => {
             const die = document.createElement('div');
             die.className = 'die';
-            if (this.usedDice.has(index)) {
-                die.classList.add('used'); // Add visual indicator for used dice
-            }
             die.textContent = value;
-            die.addEventListener('click', () => {
-                if (!this.usedDice.has(index) && this.currentChoice) {
-                    this.selectDie(index);
-                }
-            });
+            
+            // Only grey out this specific die if it's been used
+            if (this.usedDice.has(index)) {
+                die.classList.add('used');
+                console.log(`Die ${index} is used and greyed out`);
+            } else {
+                // Only add click listener to unused dice
+                die.addEventListener('click', () => {
+                    if (this.currentChoice !== null) {
+                        console.log(`Clicking die ${index} with value ${value}`);
+                        this.selectDie(index);
+                    }
+                });
+            }
+            
             diceContainer.appendChild(die);
         });
 
-        console.log('Displayed dice:', {
-            values: this.currentDice,
-            usedDice: Array.from(this.usedDice)
+        console.log('Current dice state:', {
+            allDice: this.currentDice,
+            usedDice: Array.from(this.usedDice),
+            currentChoice: this.currentChoice
         });
     }
 
     selectDie(index) {
         if (this.usedDice.has(index)) {
-            console.log('Die already used:', index);
+            console.log(`Die ${index} is already used`);
             return;
         }
 
-        console.log('Die selected:', {
+        console.log('Selecting die:', {
             index: index,
             value: this.currentDice[index],
             currentChoice: this.currentChoice
@@ -269,10 +280,11 @@ class Game {
         const value = this.currentDice[index];
         const difficulty = this.getCurrentDifficulty();
         
-        // Mark die as used
+        // Mark only this specific die as used
         this.usedDice.add(index);
+        console.log(`Marked die ${index} as used`);
         
-        // Update dice display
+        // Update the display to grey out only the used die
         this.displayDice();
         
         this.calculateOutcome(value, difficulty);
@@ -281,14 +293,6 @@ class Game {
         this.currentChoice = null;
         document.querySelectorAll('.choice-button').forEach(btn => 
             btn.classList.remove('selected'));
-        
-        // Check if turn should end (all dice used or no more valid actions)
-        if (this.usedDice.size === 5) {
-            console.log('All dice used, advancing to next scene');
-            setTimeout(() => {
-                this.advanceStory();
-            }, 2000);
-        }
     }
 
     getCurrentDifficulty() {
@@ -411,10 +415,14 @@ class Game {
 }
 
 // Initialize game when DOM is loaded
+console.log('Setting up DOMContentLoaded listener');
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, getting story ID from URL');
     const urlParams = new URLSearchParams(window.location.search);
     const storyId = urlParams.get('story') || 'last_backup';
     
-    // Create game instance
+    console.log('Creating game instance with story:', storyId);
     window.game = new Game(storyId);
-}); 
+});
+
+console.log('game.js finished loading'); 
