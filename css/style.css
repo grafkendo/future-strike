@@ -474,4 +474,52 @@ nav a:hover {
 
 .scene-image img:hover {
     opacity: 1;
+}
+
+/* Add new styles */
+.locations-panel {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #00ffff;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.current-location {
+    color: #ff69b4;
+    font-family: 'Share Tech Mono', monospace;
+    margin-bottom: 10px;
+}
+
+.available-locations h3 {
+    color: #00ffff;
+    font-size: 1em;
+    margin-bottom: 10px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.location-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.location-button {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    padding: 8px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    transition: all 0.3s ease;
+}
+
+.location-button:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.location-button.locked {
+    border-color: #666;
+    color: #666;
+    cursor: not-allowed;
 } 

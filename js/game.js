@@ -13,6 +13,9 @@ class Game {
         this.rollConfirmed = false;
         this.waitingForNewRoll = true;
         this.canEndTurn = false;
+        this.availableLocations = new Set(['apartment']);
+        this.currentLocation = 'apartment';
+        this.visitedLocations = new Set(['apartment']);
         
         console.log('Game initialized, waiting for first roll');
         this.init();
@@ -178,6 +181,12 @@ class Game {
             text: scene.text,
             choices: scene.choices
         });
+
+        if (['noodle_shop', 'night_market', 'tunnels', 'rooftops'].includes(sceneId)) {
+            this.visitedLocations.add(sceneId);
+        }
+
+        this.updateLocations();
     }
 
     displayScene(scene) {
@@ -390,6 +399,14 @@ class Game {
                 this.endGame();
             }
         }
+
+        if (this.currentChoice) {
+            const choice = this.story.scenes[this.currentScene].choices[this.currentChoice - 1];
+            if (choice.healAmount && diceValue >= difficulty) {
+                this.health = Math.min(this.health + choice.healAmount, this.story.gameConfig.maxHealth);
+                this.updateHealth();
+            }
+        }
     }
 
     updateHealth() {
@@ -505,6 +522,124 @@ class Game {
         outcome.style.display = 'block';
         outcome.textContent = 'TURN ENDED: Roll dice for your next actions.';
         outcome.style.color = '#00ffff';
+    }
+
+    updateLocations() {
+        const locationValue = document.querySelector('.location-value');
+        const locationButtons = document.querySelector('.location-buttons');
+        
+        // Update current location display
+        locationValue.textContent = this.currentLocation.toUpperCase();
+        
+        // Clear and rebuild location buttons
+        locationButtons.innerHTML = '';
+        
+        // Define revisitable locations
+        const revisitableLocations = {
+            'apartment': {
+                name: 'APARTMENT',
+                choices: [
+                    {
+                        text: "Rest and recover",
+                        type: "Light",
+                        difficulty: 3,
+                        outcome: "Restored 2 health points",
+                        healAmount: 2,
+                        endsTurn: false
+                    },
+                    {
+                        text: "Check medical supplies",
+                        type: "Light",
+                        difficulty: 3,
+                        outcome: "Found some stims. Restored 2 health points",
+                        healAmount: 2,
+                        endsTurn: false
+                    }
+                ]
+            },
+            'noodle_shop': {
+                name: 'NOODLE_SHOP',
+                choices: [/* shop specific choices */]
+            },
+            'night_market': {
+                name: 'NIGHT_MARKET',
+                choices: [/* market specific choices */]
+            },
+            'tunnels': {
+                name: 'TUNNELS',
+                choices: [/* tunnel specific choices */]
+            },
+            'rooftops': {
+                name: 'ROOFTOPS',
+                choices: [/* rooftop specific choices */]
+            }
+        };
+
+        // Create buttons for each available location
+        Object.keys(revisitableLocations).forEach(loc => {
+            if (this.visitedLocations.has(loc)) {
+                const btn = document.createElement('button');
+                btn.className = 'location-button';
+                btn.textContent = revisitableLocations[loc].name;
+                
+                if (loc !== this.currentLocation) {
+                    btn.addEventListener('click', () => this.travelTo(loc));
+                } else {
+                    btn.disabled = true;
+                }
+                
+                locationButtons.appendChild(btn);
+            }
+        });
+    }
+
+    travelTo(location) {
+        console.log(`Traveling to ${location}`);
+        this.currentLocation = location;
+        
+        // Load location-specific scene
+        if (location === 'apartment') {
+            this.loadApartmentScene();
+        } else {
+            this.loadScene(location);
+        }
+        
+        this.updateLocations();
+    }
+
+    loadApartmentScene() {
+        const apartmentScene = {
+            image: "apartment.png",
+            text: "Your apartment. A cramped haven in the sprawling city. Medical supplies and basic security systems keep you alive between runs.",
+            turnText: "Time to recover and plan your next move.",
+            choices: [
+                {
+                    text: "Rest and recover",
+                    type: "Light",
+                    difficulty: 3,
+                    outcome: "Restored 2 health points",
+                    healAmount: 2,
+                    endsTurn: false
+                },
+                {
+                    text: "Check medical supplies",
+                    type: "Light",
+                    difficulty: 3,
+                    outcome: "Found some stims. Restored 2 health points",
+                    healAmount: 2,
+                    endsTurn: false
+                },
+                {
+                    text: "Review mission data",
+                    type: "Medium",
+                    difficulty: 4,
+                    outcome: "Gained new insights about your situation.",
+                    endsTurn: false
+                }
+            ]
+        };
+        
+        this.displayScene(apartmentScene);
     }
 }
 
