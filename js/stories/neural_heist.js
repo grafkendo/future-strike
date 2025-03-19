@@ -6,7 +6,8 @@ export default {
         author: "FutureStrike Team",
         description: "Break into a corporate vault - inside someone's mind",
         difficulty: "Hard",
-        estimatedTime: "45-60 minutes"
+        estimatedTime: "45-60 minutes",
+        defaultImage: "dive.png"
     },
     gameConfig: {
         startingHealth: 20,
@@ -19,7 +20,8 @@ export default {
     },
     scenes: {
         1: {
-            text: "The target: a high-level Arasaka exec with classified data locked in a neural vault. Your team needs you to make the connection while they run interference. The building's security is top-notch, but you've got an edge - they don't know you're coming.",
+            image: "dive.png",
+            text: "The neural interface crackles as you prepare to dive...",
             choices: [
                 {
                     text: "Use standard neural link protocol",

@@ -6,12 +6,13 @@ class Game {
         this.storyId = storyId;
         this.story = null;
         this.health = 20;
-        this.currentScene = 1;
+        this.currentScene = '1'; // Change to string to handle named scenes
         this.currentDice = [];      // Stores the dice values for current turn
         this.usedDice = new Set();  // Tracks which dice indices have been used this turn
         this.currentChoice = null;
         this.rollConfirmed = false;
         this.waitingForNewRoll = true;
+        this.canEndTurn = false;
         
         console.log('Game initialized, waiting for first roll');
         this.init();
@@ -130,18 +131,53 @@ class Game {
         }
     }
 
-    loadScene(sceneNumber) {
-        if (!this.story || !this.story.scenes) {
-            console.error('Story or scenes not loaded');
+    loadScene(sceneId) {
+        console.log('Loading scene:', sceneId);
+        if (!this.story) {
+            console.error('Story not loaded');
             return;
         }
 
-        const scene = this.story.scenes[sceneNumber];
+        const scene = this.story.scenes[sceneId];
         if (!scene) {
-            this.displayEndGame();
+            console.error('Scene not found:', sceneId);
+            this.endGame();
             return;
         }
+
+        // Reset turn state for new scene
+        this.rollConfirmed = false;
+        this.currentChoice = null;
+        this.currentDice = [];
+        this.usedDice.clear();
+        this.waitingForNewRoll = true;
+        this.canEndTurn = false;
+
+        // Load scene image
+        const sceneImage = document.querySelector('.scene-image');
+        if (scene.image) {
+            sceneImage.innerHTML = `<img src="assets/images/${scene.image}" alt="Scene ${sceneId}">`;
+        } else {
+            sceneImage.innerHTML = `<img src="assets/images/${this.storyId}.webp" alt="Story Image">`;
+        }
+
+        // Update scene number display
+        const sceneDisplay = document.querySelector('.current-scene');
+        sceneDisplay.textContent = `SCENE: ${sceneId}`;
+
+        // Clear previous outcome
+        const outcome = document.querySelector('.outcome-text');
+        outcome.style.display = 'none';
+
         this.displayScene(scene);
+        this.updateGameState();
+        this.updateEndTurnButton();
+        
+        console.log('Scene loaded:', {
+            id: sceneId,
+            text: scene.text,
+            choices: scene.choices
+        });
     }
 
     displayScene(scene) {
@@ -313,53 +349,41 @@ class Game {
         return difficulty;
     }
 
-    calculateOutcome(dieValue, difficulty) {
-        const diff = dieValue - difficulty;
-        let outcome;
-        let healthCost;
-
-        if (dieValue === 6) {
-            outcome = "Perfect Success!";
-            healthCost = 0;
-        } else if (diff > 1) {
-            outcome = "Clean Success";
-            healthCost = 1;
-        } else if (diff === 0) {
-            outcome = "Narrow Success";
-            healthCost = 2;
-        } else if (diff === -1) {
-            outcome = "Messy Success";
-            healthCost = 3;
+    calculateOutcome(diceValue, difficulty) {
+        console.log('Calculating outcome:', { diceValue, difficulty });
+        const outcome = document.querySelector('.outcome-text');
+        outcome.style.display = 'block';
+        
+        if (diceValue >= difficulty) {
+            outcome.textContent = 'SUCCESS: Action completed.';
+            outcome.style.color = '#00ff00';
+            
+            // Get the selected choice and its next scene
+            const scene = this.story.scenes[this.currentScene];
+            const choice = scene.choices[this.currentChoice - 1];
+            
+            if (choice.nextScene) {
+                console.log(`Transitioning to scene: ${choice.nextScene}`);
+                setTimeout(() => {
+                    this.currentScene = choice.nextScene;
+                    this.loadScene(this.currentScene);
+                }, 2000);
+            }
+            
         } else {
-            outcome = "Failure";
-            healthCost = 4;
+            outcome.textContent = 'FAILURE: Action failed. -2 Health';
+            outcome.style.color = '#ff0000';
+            this.health -= 2;
+            this.updateHealth();
+            
+            if (this.health <= 0) {
+                this.endGame();
+            }
         }
-
-        this.updateHealth(healthCost);
-        this.displayOutcome(outcome, healthCost);
     }
 
-    updateHealth(cost) {
-        this.health = Math.max(0, this.health - cost);
+    updateHealth() {
         document.querySelector('.health-value').textContent = `${this.health}/20`;
-    }
-
-    displayOutcome(outcome, healthCost) {
-        const outcomePanel = document.querySelector('.outcome-text');
-        outcomePanel.innerHTML = `
-            <h3>${outcome}</h3>
-            <p>Health cost: ${healthCost}</p>
-            <p class="continue-prompt">Continuing in 2 seconds...</p>
-        `;
-        outcomePanel.style.display = 'block';
-    }
-
-    clearDiceInput() {
-        document.querySelectorAll('.dice-box').forEach(box => {
-            box.value = '';
-            box.style.borderColor = '#ff69b4';
-        });
-        document.querySelectorAll('.dice-box')[0].focus();
     }
 
     displayEndGame() {
@@ -411,6 +435,10 @@ class Game {
         const errorPanel = document.querySelector('.error-text');
         errorPanel.textContent = message;
         errorPanel.style.display = 'block';
+    }
+
+    updateEndTurnButton() {
+        // Implementation of updateEndTurnButton method
     }
 }
 

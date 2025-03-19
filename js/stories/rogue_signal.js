@@ -6,7 +6,8 @@ export default {
         author: "FutureStrike Team",
         description: "Track down a rogue AI that's taken over the city's automated systems",
         difficulty: "Medium",
-        estimatedTime: "30-45 minutes"
+        estimatedTime: "30-45 minutes",
+        defaultImage: "rouge.webp"
     },
     gameConfig: {
         startingHealth: 20,
@@ -19,6 +20,7 @@ export default {
     },
     scenes: {
         1: {
+            image: "rouge.webp",
             text: "Neo-Shanghai's automated systems are going haywire. Traffic signals flash random patterns, climate controls malfunction, and security drones patrol erratically. Your fixer calls with a job: trace a mysterious signal that's infiltrating the city's neural network. Time to jack in.",
             choices: [
                 {
