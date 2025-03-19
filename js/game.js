@@ -182,8 +182,6 @@ class Game {
 
     displayScene(scene) {
         console.log('Displaying scene:', scene);
-        console.log('Current dice:', this.currentDice);
-        console.log('Used dice:', Array.from(this.usedDice));
         
         const storyText = document.querySelector('.story-text');
         const choices = document.querySelector('.choices');
@@ -193,33 +191,28 @@ class Game {
             return;
         }
 
-        storyText.innerHTML = scene.text;
+        // Display main story text and turn text if available
+        storyText.innerHTML = `
+            <p>${scene.text}</p>
+            ${scene.turnText ? `<p class="turn-text">${scene.turnText}</p>` : ''}
+        `;
+        
         choices.innerHTML = '';
         
         scene.choices.forEach((choice, i) => {
-            const index = i + 1; // Start index at 1
-            console.log(`Creating button with index ${index} for choice:`, choice);
-            
+            const index = i + 1;
             const button = document.createElement('button');
             button.className = 'choice-button';
-            button.dataset.index = index; // Store 1-based index
+            button.dataset.index = index;
             
             button.innerHTML = `
                 <div class="choice-header">
-                    [${choice.type}]
+                    [${choice.type}]${choice.endsTurn ? ' - ENDS TURN' : ''}
                 </div>
                 ${choice.text}
             `;
             
-            button.addEventListener('click', () => {
-                console.log(`Action ${index} clicked:`, {
-                    rollConfirmed: this.rollConfirmed,
-                    availableDice: this.currentDice.filter((_, i) => !this.usedDice.has(i)),
-                    choice: choice
-                });
-                this.selectChoice(button);
-            });
-            
+            button.addEventListener('click', () => this.selectChoice(button));
             choices.appendChild(button);
         });
     }
@@ -258,13 +251,19 @@ class Game {
 
         if (diceValues.length === 5) {
             this.currentDice = diceValues;
-            this.usedDice.clear(); // Reset used dice for new turn
+            this.usedDice.clear();
             this.rollConfirmed = true;
             this.waitingForNewRoll = false;
-            console.log('New turn started with dice:', this.currentDice);
+            this.canEndTurn = true;
+            
+            // Display the confirmed dice roll
             this.displayDice();
-            this.clearDiceInput();
+            
+            // Don't clear input boxes - keep them for reference
             this.updateGameState();
+            this.updateEndTurnButton();
+            
+            console.log('Dice roll confirmed:', this.currentDice);
         }
     }
 
@@ -354,19 +353,30 @@ class Game {
         const outcome = document.querySelector('.outcome-text');
         outcome.style.display = 'block';
         
+        const scene = this.story.scenes[this.currentScene];
+        const choice = scene.choices[this.currentChoice - 1];
+        
         if (diceValue >= difficulty) {
-            outcome.textContent = 'SUCCESS: Action completed.';
+            if (choice.outcome) {
+                outcome.textContent = `SUCCESS: ${choice.outcome}`;
+            } else {
+                outcome.textContent = 'SUCCESS: Action completed.';
+            }
             outcome.style.color = '#00ff00';
             
-            // Get the selected choice and its next scene
-            const scene = this.story.scenes[this.currentScene];
-            const choice = scene.choices[this.currentChoice - 1];
-            
+            // Scene transition (major choice) always ends turn
             if (choice.nextScene) {
                 console.log(`Transitioning to scene: ${choice.nextScene}`);
                 setTimeout(() => {
                     this.currentScene = choice.nextScene;
                     this.loadScene(this.currentScene);
+                    this.endTurn(); // End turn after scene transition
+                }, 2000);
+            }
+            // Optional turn end for significant actions
+            else if (choice.endsTurn) {
+                setTimeout(() => {
+                    this.endTurn();
                 }, 2000);
             }
             
@@ -383,7 +393,10 @@ class Game {
     }
 
     updateHealth() {
-        document.querySelector('.health-value').textContent = `${this.health}/20`;
+        const healthValue = document.querySelector('.health-value');
+        if (healthValue) {
+            healthValue.textContent = `${this.health}/${this.story.gameConfig.maxHealth}`;
+        }
     }
 
     displayEndGame() {
@@ -439,6 +452,59 @@ class Game {
 
     updateEndTurnButton() {
         // Implementation of updateEndTurnButton method
+    }
+
+    clearDiceInput() {
+        const diceBoxes = document.querySelectorAll('.dice-box');
+        diceBoxes.forEach(box => box.value = '');
+        document.querySelector('.current-dice').innerHTML = '';
+    }
+
+    endGame() {
+        console.log('Game ending...');
+        const storyText = document.querySelector('.story-text');
+        const choices = document.querySelector('.choices');
+        const dicePanel = document.querySelector('.dice-panel');
+        
+        // Display game over message
+        storyText.innerHTML = `
+            <h2>GAME OVER</h2>
+            <p>Final Health: ${this.health}</p>
+            <p>Scene Reached: ${this.currentScene}</p>
+        `;
+        
+        // Clear choices and dice
+        choices.innerHTML = '';
+        dicePanel.innerHTML = `
+            <button class="cyber-button" onclick="location.reload()">
+                RESTART_GAME.exe
+            </button>
+        `;
+    }
+
+    endTurn() {
+        console.log('Ending turn...');
+        
+        // Clear dice only at turn end
+        this.clearDiceInput();
+        this.currentDice = [];
+        this.usedDice.clear();
+        
+        // Reset turn state
+        this.rollConfirmed = false;
+        this.currentChoice = null;
+        this.waitingForNewRoll = true;
+        this.canEndTurn = false;
+        
+        // Update UI
+        this.updateGameState();
+        this.updateEndTurnButton();
+        
+        // Display turn end message
+        const outcome = document.querySelector('.outcome-text');
+        outcome.style.display = 'block';
+        outcome.textContent = 'TURN ENDED: Roll dice for your next actions.';
+        outcome.style.color = '#00ffff';
     }
 }
 

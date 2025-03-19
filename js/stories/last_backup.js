@@ -20,56 +20,72 @@ export default {
     },
     scenes: {
         1: {
-            image: "lastbkp.webp",
+            image: "apartment.png",
             text: "You're a low-level data courier in Neo-Shanghai, tasked with delivering a mysterious neural backup. The neon-lit streets below your apartment pulse with danger. Your client was clear: this data is hot, and corps want it. You need to make your way to the delivery point, but how?",
+            turnText: "Choose your initial approach. Once you commit to a path, you'll need to re-assess the situation.",
             choices: [
                 {
                     text: "Take to the streets - stick to the crowds",
                     type: "Light",
                     difficulty: 3,
-                    nextScene: "street_level"
+                    nextScene: "street_level",
+                    endsTurn: true
                 },
                 {
                     text: "Use the maintenance tunnels",
                     type: "Medium",
                     difficulty: 4,
-                    nextScene: "tunnels"
+                    nextScene: "tunnels",
+                    endsTurn: true
                 },
                 {
                     text: "Go high - use the rooftops",
                     type: "Heavy",
                     difficulty: 5,
-                    nextScene: "rooftops"
+                    nextScene: "rooftops",
+                    endsTurn: true
                 }
             ]
         },
         street_level: {
-            image: "lastbkp.webp",
+            image: "street.png",
             text: "The streets of Neo-Shanghai engulf you in a sea of bodies and neon. Street vendors hawk black market tech while corp security drones buzz overhead. Through the crowd, you spot two potential paths: a busy night market that could provide cover, or a quieter side street where your contact left a vehicle.",
+            turnText: "You can attempt multiple actions here before committing to your next major move.",
             choices: [
                 {
-                    text: "Push through the night market",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "night_market"
-                },
-                {
-                    text: "Risk the side street to the vehicle",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "side_street"
-                },
-                {
-                    text: "Duck into a nearby noodle shop to assess",
+                    text: "Scan the crowd for threats",
                     type: "Light",
                     difficulty: 3,
-                    nextScene: "noodle_shop"
+                    outcome: "You spot potential corp agents in the crowd.",
+                    endsTurn: false
+                },
+                {
+                    text: "Check your encrypted messages",
+                    type: "Medium",
+                    difficulty: 4,
+                    outcome: "Your contact confirms the vehicle is still waiting.",
+                    endsTurn: false
+                },
+                {
+                    text: "Push through to the night market",
+                    type: "Heavy",
+                    difficulty: 5,
+                    nextScene: "night_market",
+                    endsTurn: true
+                },
+                {
+                    text: "Head for the side street vehicle",
+                    type: "Heavy",
+                    difficulty: 5,
+                    nextScene: "side_street",
+                    endsTurn: true
                 }
             ]
         },
         tunnels: {
-            image: "lastbkp.webp",
+            image: "tunnels.png",
             text: "The maintenance tunnels are a maze of pipes and forgotten tech. The air is thick with steam and the buzz of ancient machinery. You've avoided the crowds, but you're not alone down here. The echoes of footsteps suggest others use these passages too.",
+            turnText: "The tunnels offer multiple paths forward.",
             choices: [
                 {
                     text: "Follow the maintenance workers",
@@ -92,8 +108,9 @@ export default {
             ]
         },
         rooftops: {
-            image: "lastbkp.webp",
+            image: "rooftop.png",
             text: "The vertigo-inducing height of Neo-Shanghai's skyline stretches before you. Corporate spires pierce the smog-filled sky, their surfaces slick with the constant acid rain. Your augmented vision highlights possible routes, but each comes with its own risks.",
+            turnText: "The high route is dangerous but offers clear options.",
             choices: [
                 {
                     text: "Use maintenance drones for cover",
@@ -160,32 +177,37 @@ export default {
             choices: [] // Empty choices array triggers end game
         },
         night_market: {
-            image: "lastbkp.webp",
-            text: "The night market is a sensory overload of illegal tech and synthetic food aromas. Holographic advertisements float between makeshift stalls, while black market vendors hawk their wares. Through the chaos, you notice three potential opportunities: a group of corporate wage slaves heading to work, a data fence's hidden stall, or a back alley escape route.",
+            image: "market.png",
+            text: "The night market is a sensory overload of illegal tech and synthetic food aromas. Holographic advertisements float between makeshift stalls, while black market vendors hawk their wares.",
+            turnText: "The market offers multiple opportunities. You can gather intel before making your next major move.",
             choices: [
                 {
-                    text: "Blend in with the corp workers",
+                    text: "Monitor market security feeds",
                     type: "Light",
                     difficulty: 3,
-                    nextScene: "corp_crowd"
+                    outcome: "You identify the patrol patterns of market security.",
+                    endsTurn: false
                 },
                 {
-                    text: "Negotiate with the data fence",
+                    text: "Purchase counterfeit credentials",
                     type: "Medium",
                     difficulty: 4,
-                    nextScene: "data_fence"
+                    outcome: "You acquire a fake corp worker ID.",
+                    endsTurn: false
                 },
                 {
-                    text: "Risk the back alley shortcut",
+                    text: "Blend in with corp workers",
                     type: "Heavy",
                     difficulty: 5,
-                    nextScene: "market_alley"
+                    nextScene: "corp_crowd",
+                    endsTurn: true
                 }
             ]
         },
         side_street: {
-            image: "lastbkp.webp",
+            image: "alley.png",
             text: "The side street is eerily quiet compared to the main thoroughfare. Your contact's vehicle, a beaten-up delivery drone, hovers near a defunct charging station. But something feels off. You spot unusual network traffic in your HUD, camera drones above, and the distant rumble of approaching vehicles.",
+            turnText: "Consider your options carefully. The quiet might be deceptive.",
             choices: [
                 {
                     text: "Quick-hack the delivery drone",
@@ -208,8 +230,9 @@ export default {
             ]
         },
         noodle_shop: {
-            image: "lastbkp.webp",
+            image: "noodles.png",
             text: "Steam rises from countless bowls in the cramped noodle shop. The owner, an old woman with extensive cyber-mods, gives you a knowing look. Your neural scanners detect a hidden network hub beneath the shop, and you notice both a corporate exec eating alone and a maintenance access panel behind the kitchen.",
+            turnText: "The shop offers both cover and opportunities.",
             choices: [
                 {
                     text: "Access the hidden network",
@@ -232,8 +255,9 @@ export default {
             ]
         },
         hidden_net: {
-            image: "lastbkp.webp",
+            image: "network.png",
             text: "The noodle shop's hidden network is a goldmine of underground data. As you connect, you discover it's part of the legendary 'Ramen Net' - a secret network used by fixers and runners. Multiple data streams are available, each offering different advantages for your mission.",
+            turnText: "Navigate the digital landscape carefully.",
             choices: [
                 {
                     text: "Download corp patrol routes",
