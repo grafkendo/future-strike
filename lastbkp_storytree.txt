@@ -1,0 +1,55 @@
+Start (Apartment)
+├── Take to the streets
+│   ├── Night Market
+│   │   ├── Blend with corp workers
+│   │   │   ├── Corp Transit
+│   │   │   ├── Insider Meet
+│   │   │   └── Office Infiltration
+│   │   ├── Negotiate with data fence
+│   │   │   ├── Underground Route
+│   │   │   ├── Blackmail Leverage
+│   │   │   └── Market Intel
+│   │   └── Risk back alley
+│   │       ├── Rooftop Escape
+│   │       ├── Maintenance Hideout
+│   │       └── Gang Confrontation
+│   └── Side Street
+│       ├── Quick-hack drone
+│       │   ├── Commercial Route
+│       │   ├── Dangerous Flight
+│       │   └── Drone Swarm
+│       ├── Hide and observe
+│       │   ├── Counter Surveillance
+│       │   ├── Security Analysis
+│       │   └── Tactical Advance
+│       └── Combat preparation
+│           ├── Melee Combat
+│           ├── Smoke Escape
+│           └── System Takeover
+├── Use maintenance tunnels
+│   └── [Branch needs development]
+└── Use the rooftops
+    └── [Branch needs development]
+
+Revisitable Locations:
+├── Apartment (Health restoration)
+├── Noodle Shop
+├── Night Market
+├── Tunnels
+└── Rooftops
+
+Story Endings:
+├── Public Revolution (Expose Oracle)
+├── Profit Ending (Sell Oracle)
+├── Secret Keeper (Protect Oracle)
+├── Merge Ending (Join Oracle)
+├── Agent Ending (Work for Oracle)
+└── Network Ending (Share Oracle)
+
+Oracle Investigation Branch:
+├── Track Dr. Chen's lab
+├── Access archived records
+└── Contact Chen's assistant
+    ├── Use backdoor access
+    ├── Review prediction logs
+    └── Extract the assistant

@@ -24,6 +24,50 @@ class Game {
             day: 1
         };
         
+        // Update inventory max size
+        this.inventory = {
+            items: [],
+            maxSize: 6,  // Changed from 12 to 6
+            credits: 1000
+        };
+        
+        // Define available items
+        this.itemDatabase = {
+            medkit: {
+                id: 'medkit',
+                name: 'MediGel',
+                description: 'Standard street doc healing compound. Restores 5 HP.',
+                icon: 'medkit.png',
+                usable: true,
+                stackable: true,
+                value: 100,
+                effect: () => {
+                    this.heal(5);
+                }
+            },
+            deck_basic: {
+                id: 'deck_basic',
+                name: 'NetDeck Basic',
+                description: 'Entry-level cyberdeck. Required for basic hacking.',
+                icon: 'deck.png',
+                usable: false,
+                stackable: false,
+                value: 500
+            },
+            cred_chip: {
+                id: 'cred_chip',
+                name: 'Credit Chip',
+                description: 'Encrypted digital currency.',
+                icon: 'chip.png',
+                usable: true,
+                stackable: true,
+                value: 50,
+                effect: () => {
+                    this.addCredits(50);
+                }
+            }
+        };
+        
         console.log('Game initialized, waiting for first roll');
         this.init();
     }
@@ -67,6 +111,8 @@ class Game {
         this.loadScene(this.currentScene);
         this.setupEventListeners();
         this.updateGameState();
+        this.setupInventory();
+        this.updateInventoryDisplay();
     }
 
     setupEventListeners() {
@@ -688,6 +734,169 @@ class Game {
                 <span class="game-day">${dayString}</span>
             </div>
         `;
+    }
+
+    setupInventory() {
+        // Add starting items
+        this.addItem('medkit', 2);
+        this.addItem('deck_basic', 1);
+    }
+
+    addItem(itemId, quantity = 1) {
+        const itemData = this.itemDatabase[itemId];
+        if (!itemData) return false;
+
+        if (this.inventory.items.length >= this.inventory.maxSize && !itemData.stackable) {
+            console.log('Inventory full');
+            return false;
+        }
+
+        if (itemData.stackable) {
+            const existingItem = this.inventory.items.find(item => item.id === itemId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                this.inventory.items.push({ ...itemData, quantity });
+            }
+        } else {
+            this.inventory.items.push({ ...itemData, quantity: 1 });
+        }
+
+        this.updateInventoryDisplay();
+        return true;
+    }
+
+    removeItem(itemId, quantity = 1) {
+        const itemIndex = this.inventory.items.findIndex(item => item.id === itemId);
+        if (itemIndex === -1) return false;
+
+        const item = this.inventory.items[itemIndex];
+        if (item.quantity > quantity) {
+            item.quantity -= quantity;
+        } else {
+            this.inventory.items.splice(itemIndex, 1);
+        }
+
+        this.updateInventoryDisplay();
+        return true;
+    }
+
+    useItem(itemId) {
+        const item = this.inventory.items.find(item => item.id === itemId);
+        if (!item || !item.usable) return false;
+
+        if (item.effect) {
+            item.effect();
+        }
+
+        this.removeItem(itemId, 1);
+        return true;
+    }
+
+    updateInventoryDisplay() {
+        const inventoryGrid = document.querySelector('.inventory-grid');
+        const creditsDisplay = document.querySelector('.credits-value');
+        
+        // Update credits
+        creditsDisplay.textContent = this.inventory.credits.toLocaleString();
+
+        // Clear grid
+        inventoryGrid.innerHTML = '';
+
+        // Create slots
+        for (let i = 0; i < this.inventory.maxSize; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'inventory-slot empty';
+            
+            if (i < this.inventory.items.length) {
+                const item = this.inventory.items[i];
+                slot.classList.remove('empty');
+                slot.innerHTML = `
+                    <img src="assets/images/items/${item.icon}" alt="${item.name}">
+                    ${item.stackable && item.quantity > 1 ? `<span class="item-count">x${item.quantity}</span>` : ''}
+                `;
+                slot.addEventListener('click', () => this.showItemDetails(item));
+            }
+            
+            inventoryGrid.appendChild(slot);
+        }
+    }
+
+    showItemDetails(item) {
+        const details = document.querySelector('.item-details');
+        const slot = event.currentTarget;
+        const slotRect = slot.getBoundingClientRect();
+        
+        details.style.display = 'block';
+        details.style.left = `${slotRect.left}px`;
+        details.style.top = `${slotRect.bottom + 5}px`; // 5px gap
+        
+        // Close details when clicking outside
+        const closeDetails = (e) => {
+            if (!details.contains(e.target) && !slot.contains(e.target)) {
+                details.style.display = 'none';
+                document.removeEventListener('click', closeDetails);
+            }
+        };
+        
+        document.addEventListener('click', closeDetails);
+        
+        // Update details content
+        details.querySelector('.item-name').textContent = item.name;
+        details.querySelector('.item-description').textContent = item.description;
+        
+        const actions = details.querySelector('.item-actions');
+        actions.innerHTML = '';
+        
+        if (item.usable) {
+            const useBtn = document.createElement('button');
+            useBtn.className = 'item-action';
+            useBtn.textContent = 'USE';
+            useBtn.addEventListener('click', () => {
+                this.useItem(item.id);
+                details.style.display = 'none';
+            });
+            actions.appendChild(useBtn);
+        }
+        
+        const dropBtn = document.createElement('button');
+        dropBtn.className = 'item-action';
+        dropBtn.textContent = 'DROP';
+        dropBtn.addEventListener('click', () => {
+            this.removeItem(item.id);
+            details.style.display = 'none';
+        });
+        actions.appendChild(dropBtn);
+    }
+
+    addCredits(amount) {
+        this.inventory.credits += amount;
+        this.updateInventoryDisplay();
+    }
+
+    removeCredits(amount) {
+        if (this.inventory.credits >= amount) {
+            this.inventory.credits -= amount;
+            this.updateInventoryDisplay();
+            return true;
+        }
+        return false;
+    }
+
+    // Add to existing heal method
+    heal(amount) {
+        const oldHealth = this.health;
+        this.health = Math.min(this.health + amount, this.story.gameConfig.maxHealth);
+        const healed = this.health - oldHealth;
+        
+        if (healed > 0) {
+            const outcome = document.querySelector('.outcome-text');
+            outcome.style.display = 'block';
+            outcome.textContent = `HEALED: Restored ${healed} health points`;
+            outcome.style.color = '#00ff00';
+        }
+        
+        this.updateHealth();
     }
 }
 
