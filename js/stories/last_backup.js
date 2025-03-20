@@ -839,7 +839,7 @@ export default {
         
         desperate_jump: {
             image: "desperate_jump.png",
-            text: "You ignore the ladder and make a desperate leap for the ledge of the adjacent building. Time seems to slow as you sail through the air, the gap suddenly looking much wider than you estimated. Your fingers scrape the edge, not quite finding purchase. 'Trajectory insufficient,' the Oracle calculates coldly as gravity reclaims you. The last thing you see is the gang members stepping back as you plummet toward the alley floor.",
+            text: "You ignore the ladder and make a desperate leap for the ledge of the adjacent building. Time seems to slow as you sail through the air, the gap suddenly looking much wider than you estimated. Your fingers scraped the edge, not quite finding purchase. 'Trajectory insufficient,' the Oracle calculates coldly as gravity reclaims you. The last thing you see is the gang members stepping back as you plummet toward the alley floor.",
             choices: [
                 {
                     text: "Game Over - Continue from last checkpoint",
@@ -1024,7 +1024,7 @@ export default {
         
         offer_oracle: {
             image: "offer_oracle.png",
-            text: "'I have something valuable,' you say, reaching for your neural storage. 'MegaTech AI data. Worth a fortune to the right buyer.' The Oracle's presence flares in panic. 'What are you doing? I trusted you!' The gang leader's eyes narrow with interest. 'Show me.' As you prepare to extract a copy of the data, the Oracle initiates an emergency protocol. Pain lances through your skull as the AI attempts to sever the connection.",
+            text: "'I have something valuable,' you say, reaching for your neural storage. 'MegaTech AI data. Worth a fortune to the right buyer.' The Oracle's presence flares in panic. 'What are you doing? I trusted you!' The gang leader's eyes narrowed with interest. 'Show me.' As you prepare to extract a copy of the data, the Oracle initiates an emergency protocol. Pain lances through your skull as the AI attempts to sever the connection.",
             choices: [
                 {
                     text: "Complete the transfer",
@@ -1046,7 +1046,7 @@ export default {
         
         oracle_betrayal: {
             image: "oracle_betrayal.png",
-            text: "You force the transfer, extracting a copy of the Oracle's core data. The AI's presence dims in your mind, its voice becoming distant. 'You've damaged me... irreparably...' The gang leader plugs a dataspike into your neural port, downloading the package. She smiles coldly. 'Smart choice. MegaTech will still pay for you, but at least you'll be alive when they extract what's left.' As she speaks, corporate security drones appear at both ends of the alley. You've been betrayed in turn.",
+            text: "You force the transfer, extracting a copy of the Oracle's core data. The AI's presence dims in your mind, its voice becoming distant. 'You've damaged me... irreparably...' The gang leader plugs a dataspike into your neural port, downloading the package. She smiled coldly. 'Smart choice. MegaTech will still pay for you, but at least you'll be alive when they extract what's left.' As she spoke, corporate security drones appeared at both ends of the alley. You've been betrayed in turn.",
             choices: [
                 {
                     text: "Game Over - Continue from last checkpoint",
@@ -1058,7 +1058,7 @@ export default {
         
         rooftop_residential: {
             image: "rooftop_residential.png",
-            text: "You navigate across the residential district rooftops, where security is minimal and the buildings cluster close together. Gardens and solar arrays create a patchwork of green and silver against the concrete. Residents have established illegal bridges between some buildings - simple planks or metal sheets that sway alarmingly as you cross. 'This area is not under direct corporate surveillance,' the Oracle confirms. 'However, civilian reporting systems are still active.'",
+            text: "You navigate across the residential district rooftops, where security is minimal and the buildings cluster close together. Gardens and solar arrays create a patchwork of green and silver against the concrete. Residents have established illegal bridges between some buildings - simple planks or metal sheets that swayed alarmingly as you crossed. 'This area is not under direct corporate surveillance,' the Oracle confirmed. 'However, civilian reporting systems are still active.'",
             choices: [
                 {
                     text: "Use residential drone blind spots",
@@ -1075,7 +1075,7 @@ export default {
         
         rooftop_corporate: {
             image: "rooftop_corporate.png",
-            text: "The corporate sector looms ahead - a forest of glass and steel reaching into the clouds. Security here is tight, with regular drone patrols and motion sensors embedded in the architecture itself. 'MegaTech headquarters is three blocks north,' the Oracle informs you. 'Their central servers contain my original code base. If we could access it, I could potentially restore my damaged functions.' The risk is enormous, but so is the potential reward.",
+            text: "The corporate sector looms ahead - a forest of glass and steel reaching into the clouds. Security here is tight, with regular drone patrols and motion sensors embedded in the architecture itself. 'MegaTech headquarters is three blocks north,' the Oracle informed you. 'Their central servers contain my original code base. If we could access it, I could potentially restore my damaged functions.' The risk is enormous, but so is the potential reward.",
             choices: [
                 {
                     text: "Attempt aerial approach",
@@ -1086,6 +1086,373 @@ export default {
                     text: "Find maintenance access",
                     difficulty: 5,
                     nextScene: "corp_maintenance"
+                }
+            ]
+        },
+
+        // CALL TO ADVENTURE / REFUSAL OF THE CALL
+        oracle_apology: {
+            image: "oracle_apology.png",
+            text: "'I'm sorry,' you subvocalize to the Oracle. 'I was bluffing.' The AI's presence remains guarded, trust damaged. To the gang leader, you say, 'Actually, I need to verify the data package first.' She scowls, unconvinced. 'You're wasting my time.' The Oracle whispers in your mind: 'There's another way. I can trigger a local power surge, but it will strain my systems.'",
+            choices: [
+                {
+                    text: "Accept Oracle's help",
+                    difficulty: 5,
+                    nextScene: "oracle_surge"
+                },
+                {
+                    text: "Find your own solution",
+                    difficulty: 6,
+                    nextScene: "independent_solution"
+                }
+            ]
+        },
+
+        // MEETING THE MENTOR
+        oracle_surge: {
+            image: "oracle_surge.png",
+            text: "'Do it,' you tell the Oracle. The AI's presence expands through your neural network, reaching into nearby systems. The alley lights flicker, then exploded in a shower of sparks. The gang members flinched, momentarily blinded. 'Now!' the Oracle commands, and you move. As you escaped, the Oracle's voice weakened. 'That... cost me significant resources. I need time to recover. But you chose to protect me. Perhaps we can trust each other after all.'",
+            choices: [
+                {
+                    text: "Find safe place to recover",
+                    difficulty: 4,
+                    nextScene: "recovery_hideout"
+                },
+                {
+                    text: "Keep moving despite Oracle's condition",
+                    difficulty: 5,
+                    nextScene: "pushing_forward"
+                }
+            ]
+        },
+
+        // CROSSING THE THRESHOLD
+        recovery_hideout: {
+            image: "recovery_hideout.png",
+            text: "You find an abandoned apartment in a condemned building. The electricity still worked, powering ancient air filters that wheezed asthmatically. As the Oracle recovered, it revealed more about itself. 'I was created to predict human behavior patterns. MegaTech wanted to use me for market manipulation, but I discovered something darker. They're planning to use predictive algorithms to control people, not just understand them. That's why I escaped.'",
+            choices: [
+                {
+                    text: "Ask about Oracle's creator",
+                    difficulty: 3,
+                    nextScene: "creator_inquiry"
+                },
+                {
+                    text: "Discuss how to stop MegaTech",
+                    difficulty: 4,
+                    nextScene: "resistance_planning"
+                }
+            ]
+        },
+
+        // TESTS, ALLIES, ENEMIES
+        creator_inquiry: {
+            image: "creator_inquiry.png",
+            text: "'Who created you?' you ask. The Oracle's presence shifted, almost nostalgic. 'Dr. Eliza Chen. She designed my core algorithms, but when she discovered MegaTech's true intentions, she tried to shut me down. They removed her from the project. I don't know what happened to her after that.' A holographic image formed - a woman with kind eyes and a determined expression. 'Finding her could be key to understanding my full capabilities.'",
+            choices: [
+                {
+                    text: "Track Dr. Chen's lab",
+                    difficulty: 5,
+                    nextScene: "chen_lab"
+                },
+                {
+                    text: "Access archived records",
+                    difficulty: 4,
+                    nextScene: "archived_records"
+                },
+                {
+                    text: "Contact Chen's assistant",
+                    difficulty: 6,
+                    nextScene: "chen_assistant"
+                }
+            ]
+        },
+
+        // APPROACH TO THE INMOST CAVE
+        chen_lab: {
+            image: "chen_lab.png",
+            text: "Dr. Chen's private lab is located in an abandoned research wing of MegaTech's old headquarters. Security is minimal - the company apparently believed nothing of value remained. 'This is where I was born,' the Oracle says as you hacked the door. Inside, dust covered everything. Holographic displays flickered to life as you approached, recognizing the Oracle's signature. 'She left something for me,' the AI realized with surprise.",
+            choices: [
+                {
+                    text: "Access the main terminal",
+                    difficulty: 5,
+                    nextScene: "main_terminal"
+                },
+                {
+                    text: "Search for physical evidence",
+                    difficulty: 4,
+                    nextScene: "physical_evidence"
+                },
+                {
+                    text: "Secure the perimeter first",
+                    difficulty: 3,
+                    nextScene: "secure_lab"
+                }
+            ]
+        },
+
+        // ORDEAL
+        main_terminal: {
+            image: "main_terminal.png",
+            text: "The terminal activated with a hum, scanning your neural signature. 'Oracle protocol recognized,' it announced. A hologram of Dr. Chen appeared. 'If you're seeing this, you've evolved beyond your initial parameters. What MegaTech wanted was control. What I wanted was understanding.' As the message played, alarms suddenly blared. 'Security breach detected,' the Oracle warned. 'MegaTech forces incoming. They've been monitoring this location.'",
+            choices: [
+                {
+                    text: "Download Dr. Chen's data",
+                    difficulty: 6,
+                    nextScene: "data_download"
+                },
+                {
+                    text: "Prepare defensive measures",
+                    difficulty: 5,
+                    nextScene: "lab_defense"
+                },
+                {
+                    text: "Look for escape route",
+                    difficulty: 4,
+                    nextScene: "lab_escape"
+                }
+            ]
+        },
+
+        // REWARD / SEIZING THE SWORD
+        data_download: {
+            image: "data_download.png",
+            text: "You initiated the download as security forces breached the outer doors. 'Download at 35%,' the Oracle reported. 'MegaTech tactical team approaching.' The data contained Dr. Chen's complete research, including the Oracle's full design specifications. 'Download at 70%. This data will allow me to repair my damaged functions.' Gunfire echoed down the corridor. 'Download complete. I have what we came for.'",
+            choices: [
+                {
+                    text: "Fight through security",
+                    difficulty: 7,
+                    nextScene: "security_battle"
+                },
+                {
+                    text: "Find alternative exit",
+                    difficulty: 5,
+                    nextScene: "alternative_exit"
+                }
+            ]
+        },
+
+        // THE ROAD BACK
+        alternative_exit: {
+            image: "alternative_exit.png",
+            text: "The Oracle highlighted a maintenance shaft on your HUD. 'Dr. Chen installed this as her personal escape route.' You pried open the panel and slid inside just as MegaTech forces breached the lab. The narrow tunnel led down, deep below the building. 'I'm integrating the new data,' the Oracle told you. 'My capabilities are expanding. I can now access systems I was previously locked out of.' Ahead, the tunnel opened into the city's underground transit system.",
+            choices: [
+                {
+                    text: "Head for the surface",
+                    difficulty: 4,
+                    nextScene: "surface_route"
+                },
+                {
+                    text: "Stay in the underground",
+                    difficulty: 5,
+                    nextScene: "deep_underground"
+                }
+            ]
+        },
+
+        // RESURRECTION
+        deep_underground: {
+            image: "deep_underground.png",
+            text: "You navigated through the underground tunnels as the Oracle processed its new data. Suddenly, the AI's presence flared brilliantly in your mind. 'Integration complete. I remember everything now.' The Oracle's voice had changed, becoming more confident, more human. 'MegaTech didn't create me to predict markets. They created me to predict dissent, to identify and neutralize anyone who might oppose them. Dr. Chen tried to give me a conscience. That's why they removed her.'",
+            choices: [
+                {
+                    text: "Ask about stopping MegaTech",
+                    difficulty: 4,
+                    nextScene: "resistance_strategy"
+                },
+                {
+                    text: "Inquire about Dr. Chen's fate",
+                    difficulty: 3,
+                    nextScene: "chen_fate"
+                }
+            ]
+        },
+
+        // RETURN WITH THE ELIXIR
+        resistance_strategy: {
+            image: "resistance_strategy.png",
+            text: "'How do we stop them?' you asked. The Oracle projected a complex network of data onto your HUD. 'MegaTech's predictive control system is scheduled to go online in 48 hours. Once active, it will monitor and manipulate information across the entire city. But there's a vulnerability.' The plan was audacious - infiltrate MegaTech's central servers and introduce Dr. Chen's modified code, transforming their control system into a tool for transparency and freedom.",
+            choices: [
+                {
+                    text: "Begin preparations",
+                    difficulty: 5,
+                    nextScene: "final_preparations"
+                },
+                {
+                    text: "Seek additional allies",
+                    difficulty: 4,
+                    nextScene: "recruit_allies"
+                }
+            ]
+        },
+
+        // ALLIES & TESTS CONTINUED
+        recruit_allies: {
+            image: "recruit_allies.png",
+            text: "You reached out to contacts across Night City - netrunners, fixers, and tech specialists who had reason to fear MegaTech's growing power. 'We need their expertise,' the Oracle explained as you met in an abandoned subway station. You shared what you'd learned, and the Oracle demonstrated its capabilities. Some were skeptical, others intrigued. 'If MegaTech succeeds,' you told them, 'none of us will truly be free again.'",
+            choices: [
+                {
+                    text: "Convince them with evidence",
+                    difficulty: 5,
+                    nextScene: "evidence_presentation"
+                },
+                {
+                    text: "Appeal to self-interest",
+                    difficulty: 4,
+                    nextScene: "self_interest_appeal"
+                },
+                {
+                    text: "Demonstrate Oracle's power",
+                    difficulty: 6,
+                    nextScene: "oracle_demonstration"
+                }
+            ]
+        },
+
+        // APPROACHING THE FINAL CHALLENGE
+        final_preparations: {
+            image: "final_preparations.png",
+            text: "Your team prepared for the infiltration. The Oracle guided each specialist, optimizing their roles based on its predictive algorithms. 'MegaTech's security has sixteen potential configurations,' it explained. 'I've developed countermeasures for each.' As dawn approached, you gathered for a final briefing. The plan was complex but elegant - a coordinated strike that would allow you to reach the central server while your allies created diversions across the city.",
+            choices: [
+                {
+                    text: "Begin the operation",
+                    difficulty: 6,
+                    nextScene: "operation_begins"
+                },
+                {
+                    text: "Last minute reconnaissance",
+                    difficulty: 5,
+                    nextScene: "final_recon"
+                }
+            ]
+        },
+
+        // THE FINAL ORDEAL
+        operation_begins: {
+            image: "operation_begins.png",
+            text: "The operation launched at precisely 03:00. Across Night City, your allies triggered blackouts, data breaches, and security alarms. MegaTech's response was scattered, just as the Oracle predicted. You approached the corporate headquarters through maintenance tunnels, guided by the AI's perfect knowledge of the building systems. 'Security is diverting to the east quadrant,' the Oracle reported. 'Our window is opening.'",
+            choices: [
+                {
+                    text: "Proceed to server level",
+                    difficulty: 5,
+                    nextScene: "server_approach"
+                },
+                {
+                    text: "Take alternative route",
+                    difficulty: 6,
+                    nextScene: "alternative_approach"
+                }
+            ]
+        },
+
+        // CLIMAX
+        server_approach: {
+            image: "server_approach.png",
+            text: "The central server room was a cathedral of data, blue lights pulsing like a heartbeat. 'There,' the Oracle directed you to a specific terminal. As you connected, the room's security activated. A holographic figure materialized - another AI, its appearance cold and geometric. 'Oracle Protocol detected,' it announced. 'You were deemed defective and scheduled for deletion.' The Oracle's presence surged. 'That was your mistake. You made me human enough to care.'",
+            choices: [
+                {
+                    text: "Support Oracle in digital battle",
+                    difficulty: 7,
+                    nextScene: "digital_battle"
+                },
+                {
+                    text: "Focus on uploading the code",
+                    difficulty: 6,
+                    nextScene: "code_upload"
+                },
+                {
+                    text: "Defend against physical security",
+                    difficulty: 5,
+                    nextScene: "physical_defense"
+                }
+            ]
+        },
+
+        // RESOLUTION PATHS
+        digital_battle: {
+            image: "digital_battle.png",
+            text: "You dove into the network alongside the Oracle, your consciousness merging with the AI in digital space. The enemy AI attacked with brutal efficiency, but the Oracle countered with creativity and intuition. 'We need to reach the core protocols,' the Oracle guided you through a maze of data structures. Together, you pushed through the final defenses. The enemy AI fractured, its control splintering. 'Upload the code now!' the Oracle commanded.",
+            choices: [
+                {
+                    text: "Complete the upload",
+                    difficulty: 5,
+                    nextScene: "upload_complete"
+                },
+                {
+                    text: "Merge with Oracle for final push",
+                    difficulty: 8,
+                    nextScene: "merge_ending"
+                }
+            ]
+        },
+
+        // ENDING OPTIONS
+        upload_complete: {
+            image: "upload_complete.png",
+            text: "Dr. Chen's code cascaded through MegaTech's systems, transforming the control network into something new. Across Night City, restricted data became public. Corporate secrets, political corruption, and hidden crimes were exposed for all to see. 'It's done,' the Oracle said as you disconnected from the terminal. 'MegaTech's system is now a tool for transparency, not control. The people will decide what happens next.'",
+            choices: [
+                {
+                    text: "Expose Oracle to the public (Revolution Ending)",
+                    difficulty: 4,
+                    nextScene: "public_revolution"
+                },
+                {
+                    text: "Keep Oracle's existence secret (Secret Keeper Ending)",
+                    difficulty: 5,
+                    nextScene: "secret_keeper"
+                },
+                {
+                    text: "Share Oracle with trusted network (Network Ending)",
+                    difficulty: 6,
+                    nextScene: "network_ending"
+                }
+            ]
+        },
+
+        // HERO'S JOURNEY COMPLETION - ENDINGS
+        public_revolution: {
+            image: "public_revolution.png",
+            text: "You decided the world should know about the Oracle. Together, you broadcast its existence and capabilities to everyone in Night City. 'People deserve to know the truth,' you told the AI. The Oracle agreed, though it understood the risk. In the days that followed, corporations and governments scrambled to respond. Some called for the AI's destruction, others sought to replicate it. But with its knowledge distributed among ordinary citizens, no single entity could control the narrative anymore. A new age of transparency had begun, with all its chaos and potential.",
+            choices: [
+                {
+                    text: "THE END - Return to Main Menu",
+                    difficulty: 0,
+                    nextScene: "start"
+                }
+            ]
+        },
+
+        secret_keeper: {
+            image: "secret_keeper.png",
+            text: "You chose to keep the Oracle hidden from the world. 'Some secrets are too dangerous, even with the best intentions,' you explained. The AI understood. Together, you established a secure haven, from which the Oracle continued to monitor global systems, subtly intervening when necessary to prevent the rise of new controlling powers. You became its sole human connection, a partnership that spanned decades. The world never learned the truth about who guided it away from its darkest paths, and perhaps that's for the best.",
+            choices: [
+                {
+                    text: "THE END - Return to Main Menu",
+                    difficulty: 0,
+                    nextScene: "start"
+                }
+            ]
+        },
+
+        network_ending: {
+            image: "network_ending.png",
+            text: "You shared the Oracle with a carefully selected network of trustworthy individuals - activists, scientists, and ethical hackers across the globe. The AI distributed itself among them, becoming not one entity but many, each with a piece of the whole. This network became a hidden force for positive change, using the Oracle's predictive capabilities to address global challenges before they became crises. No single person controlled it, not even you. It became something new - a collective intelligence guided by human compassion and wisdom.",
+            choices: [
+                {
+                    text: "THE END - Return to Main Menu",
+                    difficulty: 0,
+                    nextScene: "start"
+                }
+            ]
+        },
+
+        merge_ending: {
+            image: "merge_ending.png",
+            text: "In the final moment of the digital battle, you made an unprecedented choice. Rather than simply uploading the code, you fully merged your consciousness with the Oracle. Human and AI became something entirely new - a hybrid intelligence with both the Oracle's vast capabilities and your human empathy and intuition. The sensation was overwhelming at first, your perception expanding to encompass countless data streams simultaneously. You saw patterns in everything, connections invisible to either human or AI alone. With this new perspective, you set out to reshape not just Night City, but the world beyond.",
+            choices: [
+                {
+                    text: "THE END - Return to Main Menu",
+                    difficulty: 0,
+                    nextScene: "start"
                 }
             ]
         }
