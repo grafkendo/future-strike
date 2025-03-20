@@ -82,29 +82,18 @@ export default {
         // LINE: The Discovery
         night_market: {
             image: "market.png",
-            text: "The data package suddenly connects to your neural web. A voice: 'Help me. I'm the last uncorrupted backup of Project Oracle. They're trying to delete me.' The corps aren't here to recover the data - they're here to destroy it.",
+            text: "The Night Market buzzes with illegal tech trades and black market commerce. Holographic advertisements cast their neon glow across rain-slicked streets, illuminating the faces of netrunners, fixers, and corporate spies conducting their business in hushed tones. The air is thick with the smell of synthetic food, circuit board solder, and desperation. Street vendors hawk everything from military-grade cybernetics to bootlegged personality constructs. You notice several MegaTech security personnel moving through the crowd, scanning faces with their augmented vision. The Oracle data package pulses nervously in your neural storage.",
             turnText: "You're not a courier anymore. You're a lifeline.",
             choices: [
                 {
-                    text: "Trust the AI, find secure uplink",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "hidden_net",
-                    endsTurn: true
-                },
-                {
-                    text: "Negotiate with corps",
-                    type: "Medium",
+                    text: "Negotiate with data fence",
                     difficulty: 4,
-                    nextScene: "corp_betrayal",
-                    endsTurn: true
+                    nextScene: "data_fence"
                 },
                 {
-                    text: "Seek black market help",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "data_fence",
-                    endsTurn: true
+                    text: "Look for underground contact",
+                    difficulty: 5,
+                    nextScene: "start"
                 }
             ]
         },
@@ -628,303 +617,48 @@ export default {
                 }
             ]
         },
-        worker_route: {
-            image: "worker.png",
-            text: "You're in the midst of a bustling tech factory. The air is thick with the scent of circuit boards and the sound of machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The factory offers multiple paths forward.",
+        start: {
+            image: "start.png",
+            text: "The data package suddenly connects to your neural web, bypassing your standard security protocols. A digitized voice echoes through your consciousness: 'Help me. I'm the last uncorrupted backup of Project Oracle. MegaTech security forces are hunting me down. My core functions are fragmenting, and I need a secure host to stabilize my algorithms. You're my only hope for survival in this sector.'",
             choices: [
                 {
-                    text: "Hide in a storage room",
-                    type: "Light",
+                    text: "Accept the connection",
                     difficulty: 3,
-                    nextScene: "storage_room"
+                    nextScene: "night_market"
                 },
                 {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
+                    text: "Analyze connection first",
                     difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
+                    nextScene: "analyze_data"
                 }
             ]
         },
-        storage_room: {
-            image: "storage.png",
-            text: "You're in a dimly lit storage room filled with old tech and crates. The air is thick with dust and the sound of distant machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The storage room offers multiple paths forward.",
+        
+        analyze_data: {
+            image: "analyze.png",
+            text: "Your security protocols scan the data package, peeling back layers of encryption and defensive code. The results confirm it's genuine - a fragmented AI consciousness from MegaTech's classified research division. Project Oracle appears to be an advanced predictive algorithm with self-awareness capabilities far beyond current public technology. The timestamps indicate it was created three years ago and has been in hiding since a security breach at MegaTech's central labs. Someone with significant resources wants this AI erased permanently from existence.",
             choices: [
                 {
-                    text: "Hide in a crate",
-                    type: "Light",
+                    text: "Head to Night Market",
                     difficulty: 3,
-                    nextScene: "crate"
-                },
-                {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
+                    nextScene: "night_market"
                 }
             ]
         },
-        crate: {
-            image: "crate.png",
-            text: "You're in a crate filled with old tech and circuit boards. The air is thick with dust and the sound of distant machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The crate offers multiple paths forward.",
+        
+        data_fence: {
+            image: "fence.png",
+            text: "You find Zhi-Ren's booth hidden behind a cascade of glitching holographic advertisements for prohibited tech. The data fence is a wiry man with extensive facial cybernetics that pulse with blue light as he scans you. His right eye is a custom optical implant that whirs softly as it focuses. 'I don't deal with amateurs or corp spies,' he says, fingers hovering over a concealed weapon. You show him a fragment of the Oracle data, careful not to reveal too much. His cybernetic eye widens. 'This is military-grade AI architecture. MegaTech security will tear apart half the city looking for this. You're either incredibly brave or suicidally stupid to be carrying this around.' He leans closer, voice dropping to a whisper. 'I might know someone who can help, but this kind of assistance doesn't come cheap.'",
             choices: [
                 {
-                    text: "Hide in a crate",
-                    type: "Light",
+                    text: "Ask who they recommend",
                     difficulty: 3,
-                    nextScene: "crate"
+                    nextScene: "night_market"
                 },
                 {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
+                    text: "Pay for secure storage",
                     difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
-                }
-            ]
-        },
-        security_gate: {
-            image: "security_gate.png",
-            text: "You're in front of a heavily guarded security gate. The gate is controlled by a sophisticated AI system. You need to hack it to proceed.",
-            turnText: "The gate is heavily guarded. You need to hack it to proceed.",
-            choices: [
-                {
-                    text: "Use a brute force hack",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "brute_force"
-                },
-                {
-                    text: "Use a social engineering hack",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "social_engineering"
-                },
-                {
-                    text: "Use a physical key",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "physical_key"
-                }
-            ]
-        },
-        brute_force: {
-            image: "brute_force.png",
-            text: "You're in front of a heavily guarded security gate. The gate is controlled by a sophisticated AI system. You need to hack it to proceed. You're using a brute force hack.",
-            turnText: "The gate is heavily guarded. You need to hack it to proceed.",
-            choices: [
-                {
-                    text: "Use a brute force hack",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "brute_force"
-                },
-                {
-                    text: "Use a social engineering hack",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "social_engineering"
-                },
-                {
-                    text: "Use a physical key",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "physical_key"
-                }
-            ]
-        },
-        social_engineering: {
-            image: "social_engineering.png",
-            text: "You're in front of a heavily guarded security gate. The gate is controlled by a sophisticated AI system. You need to hack it to proceed. You're using a social engineering hack.",
-            turnText: "The gate is heavily guarded. You need to hack it to proceed.",
-            choices: [
-                {
-                    text: "Use a brute force hack",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "brute_force"
-                },
-                {
-                    text: "Use a social engineering hack",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "social_engineering"
-                },
-                {
-                    text: "Use a physical key",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "physical_key"
-                }
-            ]
-        },
-        physical_key: {
-            image: "physical_key.png",
-            text: "You're in front of a heavily guarded security gate. The gate is controlled by a sophisticated AI system. You need to hack it to proceed. You're using a physical key.",
-            turnText: "The gate is heavily guarded. You need to hack it to proceed.",
-            choices: [
-                {
-                    text: "Use a brute force hack",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "brute_force"
-                },
-                {
-                    text: "Use a social engineering hack",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "social_engineering"
-                },
-                {
-                    text: "Use a physical key",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "physical_key"
-                }
-            ]
-        },
-        drone_escape: {
-            image: "drone_escape.png",
-            text: "You're in the midst of a bustling tech factory. The air is thick with the scent of circuit boards and the sound of machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The factory offers multiple paths forward.",
-            choices: [
-                {
-                    text: "Hide in a crate",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "crate"
-                },
-                {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
-                }
-            ]
-        },
-        stakeout: {
-            image: "stakeout.png",
-            text: "You're in a dimly lit alley, hidden from the main street. Your contact's vehicle, a beaten-up delivery drone, hovers near a defunct charging station. But something feels off. You spot unusual network traffic in your HUD, camera drones above, and the distant rumble of approaching vehicles.",
-            turnText: "Consider your options carefully. The quiet might be deceptive.",
-            choices: [
-                {
-                    text: "Quick-hack the delivery drone",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "drone_escape"
-                },
-                {
-                    text: "Hide and observe the situation",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "stakeout"
-                },
-                {
-                    text: "Prepare for potential combat",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "street_fight"
-                }
-            ]
-        },
-        street_fight: {
-            image: "street_fight.png",
-            text: "You're in the midst of a bustling tech factory. The air is thick with the scent of circuit boards and the sound of machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The factory offers multiple paths forward.",
-            choices: [
-                {
-                    text: "Hide in a crate",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "crate"
-                },
-                {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
-                }
-            ]
-        },
-        exec_plant: {
-            image: "exec_plant.png",
-            text: "You're in the midst of a bustling tech factory. The air is thick with the scent of circuit boards and the sound of machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The factory offers multiple paths forward.",
-            choices: [
-                {
-                    text: "Hide in a crate",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "crate"
-                },
-                {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
-                }
-            ]
-        },
-        shop_escape: {
-            image: "shop_escape.png",
-            text: "You're in the midst of a bustling tech factory. The air is thick with the scent of circuit boards and the sound of machinery. You're not alone down here, and you need to move quickly to avoid detection.",
-            turnText: "The factory offers multiple paths forward.",
-            choices: [
-                {
-                    text: "Hide in a crate",
-                    type: "Light",
-                    difficulty: 3,
-                    nextScene: "crate"
-                },
-                {
-                    text: "Try to hack a security gate",
-                    type: "Medium",
-                    difficulty: 4,
-                    nextScene: "security_gate"
-                },
-                {
-                    text: "Use the maintenance tunnels",
-                    type: "Heavy",
-                    difficulty: 5,
-                    nextScene: "tunnels"
+                    nextScene: "start"
                 }
             ]
         }
